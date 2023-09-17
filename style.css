@@ -15,6 +15,7 @@ html, body {
 .option {
     all: unset;
     cursor: pointer;
+    width: 30%;
 }
 .option:hover {
     filter: brightness(1.5);
@@ -29,19 +30,67 @@ html, body {
 }
 
 #panel {
-    --panel-split: 70%;
-    background: linear-gradient(var(--md-sys-color-primary-container) 0%, var(--md-sys-color-primary-container) var(--panel-split), var(--md-sys-color-secondary-container) var(--panel-split), var(--md-sys-color-secondary-container) 100%);
-    
-    width: 2000px;
-    height: 900px;
-    border-radius: 50px;
+    background: linear-gradient(var(--md-sys-color-primary-container) 0%, var(--md-sys-color-primary-container) 70%, var(--md-sys-color-secondary-container) 70%, var(--md-sys-color-secondary-container) 100%);
     z-index: -1;
-
     text-align: center;
+    border-radius: 50px;
 }
 
-#derdilla {
-    font-size: 366px;
-    padding-top: 90px;
-    padding-bottom: 210px;
+@media (max-aspect-ratio: 6/8) {
+    #panel {
+        width: 300px;
+        height: 500px;
+        background: linear-gradient(var(--md-sys-color-primary-container) 0%, var(--md-sys-color-primary-container) 25%, var(--md-sys-color-secondary-container) 25%, var(--md-sys-color-secondary-container) 100%);
+    }
+    #derdilla {
+        font-size: 50px;
+        padding-top: 35px;
+        padding-bottom: 50px;
+    }
+    .spacing-panel {
+        flex-direction: column;
+    }
+    .option {
+        width: 100%;
+        padding-top: 35px;
+        padding-bottom: 30px;
+        font-size: 30px;
+    }
+}
+
+@media (min-aspect-ratio: 6/8) {
+    @media screen and ((max-width: 1000px) or (max-height: 400px)){
+        #panel {
+            width: 200%;
+            height: 200%;
+            transform: translateX(-25%);
+        }
+    }
+
+    @media screen and (min-width: 1000px) and (min-height: 400px) {
+        #panel {
+            width: 1000px;
+            height: 400px;
+        }
+        #derdilla {
+            font-size: 190px;
+            padding-top: 30px;
+            padding-bottom: 50px;
+        }
+    }
+    
+    @media screen and (min-width: 1800px) and (min-height: 800px) {
+        #panel {
+            width: 2000px;
+            height: 900px;
+        }
+        #derdilla {
+            font-size: 366px;
+            padding-top: 90px;
+            padding-bottom: 190px;
+        }
+        .option {
+            font-size: 70px;
+        }
+    }
 }
