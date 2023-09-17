@@ -5,6 +5,15 @@ html, body {
     background-color: var(--md-sys-color-background);
 }
 
+@keyframes scaleup {
+    from {
+        scale: 0;
+    }
+    to {
+        scale: 1;
+    }
+}
+
 .centered {
     position: fixed;
     top: 50%;
@@ -34,6 +43,12 @@ html, body {
     z-index: -1;
     text-align: center;
     border-radius: 50px;
+    animation: 0.5s scaleup;
+}
+@media (prefers-reduced-motion) {
+    #panel {
+        animation:  1s scaleup;
+    }
 }
 
 @media (max-aspect-ratio: 6/8) {
@@ -62,8 +77,12 @@ html, body {
     @media screen and ((max-width: 1000px) or (max-height: 400px)){
         #panel {
             width: 200%;
-            height: 200%;
+            height: 250px;
             transform: translateX(-25%);
+        }
+        #derdilla {
+            margin-top: 20px;
+            margin-bottom: 110px;
         }
     }
 
