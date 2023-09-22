@@ -1,5 +1,13 @@
+a {
+    text-decoration: none;
+}
+
 .title {
     font-size: 40px;
+}
+.title-medium {
+    font-size: 30px;
+    margin-left: 10px;
 }
 
 .paragraph {
