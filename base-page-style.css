@@ -21,6 +21,13 @@ html, body {
     transform: translateX(-50%);
 }
 
+.document {
+    max-height: calc(100vh - var(--header-height));
+    width: 90vw;
+    max-width: 900px;
+    overflow-y: scroll;
+}
+
 .spacing-panel {
     position: relative;
     display: flex;
@@ -42,12 +49,6 @@ html, body {
 }
 .options-container > a:hover {
     filter: brightness(1.5);
-}
-
-.document {
-    height: 100%;
-    width: 90vw;
-    max-width: 900px;
 }
 
 @keyframes scaleup-bar {
