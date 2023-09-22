@@ -78,7 +78,7 @@ a {
 }
 
 @media (min-aspect-ratio: 6/8) {
-    @media screen and ((max-width: 1000px) or (max-height: 400px)){
+    @media screen and ((max-width: 200px) or (max-height: 100px)){
         #panel {
             width: 200%;
             height: 250px;
@@ -87,6 +87,22 @@ a {
         #derdilla {
             margin-top: 20px;
             margin-bottom: 110px;
+        }
+    }
+    @media screen and (min-width: 200px) and (min-height: 100px) {
+        .option {
+            padding-top: 12px;
+            font-size: 20px;
+        }
+        #panel {
+            width: 500px;
+            height: 200px;
+            border-radius: 20px;
+        }
+        #derdilla {
+            font-size: 90px;
+            padding-top: 29px;
+            padding-bottom: 10px;
         }
     }
 
@@ -98,6 +114,7 @@ a {
         #panel {
             width: 1000px;
             height: 400px;
+            border-radius: 50px;
         }
         #derdilla {
             font-size: 190px;
@@ -106,7 +123,7 @@ a {
         }
     }
     
-    @media screen and (min-width: 1800px) and (min-height: 800px) {
+    @media screen and (min-width: 1900px) and (min-height: 900px) {
         #panel {
             width: 2000px;
             height: 900px;
