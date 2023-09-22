@@ -37,6 +37,8 @@ html, body {
     all: unset;
     cursor: pointer;
     pointer-events: all;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 .options-container > a:hover {
     filter: brightness(1.5);
@@ -101,7 +103,7 @@ html, body {
     top: 50%;
     right: 0;
     transform: translateY(-50%);
-    font-size: calc(var(--header-height) - 40px);
+    font-size: calc(var(--header-height) - 60px);
     margin-right: 20px;
     width: 20em;
 }
@@ -114,7 +116,7 @@ html, body {
     padding-top: var(--header-height);
 }
 
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 730px) {
     .header-title {
         display: none;
     }
