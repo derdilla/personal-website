@@ -87,6 +87,10 @@ html, body {
     }
 
     @media screen and (min-width: 1000px) and (min-height: 400px) {
+        .option {
+            padding-top: 12px;
+            font-size: 30px;
+        }
         #panel {
             width: 1000px;
             height: 400px;
