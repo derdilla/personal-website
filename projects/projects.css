@@ -1,0 +1,53 @@
+.fullwidth {
+    width: 100vw;
+}
+
+.left20p {
+    position: absolute;
+    left: 20%;
+}
+
+.blob-container {
+    filter: blur(40px);
+	overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+#bpapp {
+    position: absolute;
+    left: 15%;
+    top: 260px;
+    right: 28%;
+    display: flex;
+}
+#bpapp > .blob-container {
+    background:#d6ac04;
+    height: 150px;
+    width: 250px;
+    border-radius: 10% 80% 20% 60%;
+}
+#bpapp > .appinfo {
+    margin-left: 78px;
+}
+
+#gamepad-mouse {
+    top: 690px;
+    text-align: right;
+    position: absolute;
+    left: 28%;
+    right: 15%;
+    display: flex;
+    flex-direction: row-reverse;
+}
+#gamepad-mouse > img {
+    margin-top: -40px;
+}
+#gamepad-mouse > .blob-container {
+    background:#3e7e62;
+    height: 195px;
+    width: 367px;
+    right: 0;
+    border-radius: 30% 40% 20% 60%;
+    transform: rotate(30deg);
+}
