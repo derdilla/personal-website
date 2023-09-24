@@ -18,7 +18,7 @@
     position: absolute;
     left: 15%;
     top: 260px;
-    right: 28%;
+    width: 900px;
     display: flex;
 }
 #bpapp > .blob-container {
@@ -34,9 +34,9 @@
 #gamepad-mouse {
     top: 690px;
     text-align: right;
-    position: absolute;
-    left: 28%;
     right: 15%;
+    position: absolute;
+    width: 900px;
     display: flex;
     flex-direction: row-reverse;
 }
@@ -50,4 +50,33 @@
     right: 0;
     border-radius: 30% 40% 20% 60%;
     transform: rotate(30deg);
+}
+
+@media screen and (max-width: 1060px){
+    #bpapp, #gamepad-mouse {
+        position: relative;
+        flex-direction: column;
+        width: 90vw;
+    }
+    #bpapp {
+        left: 0;
+        top: 50px;
+    }
+    #bpapp > .appinfo {
+        margin-left: 5vw;
+    }
+    #bpapp > img, #bpapp > .blob-container {
+        margin-left: 15vw;
+    }
+    #gamepad-mouse {
+        right: 0;
+        top: 150px;
+        margin-left: 5vw;
+    }
+    #gamepad-mouse > img {
+        align-self: end;
+    }
+    .below-header {
+        position: relative;
+    }
 }
