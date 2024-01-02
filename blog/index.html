@@ -7,7 +7,30 @@
   <title>Blog - derdilla.com</title>
   <link rel="stylesheet" href="/base-page-style.css">
   <link rel="stylesheet" href="/document-styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap"></noscript>
+  <style>
+    .post {
+      padding: 20px;
+      margin: 10px;
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: 45px;
+      color: var(--md-sys-color-on-secondary-container);
+      position: relative;
+    }
+    .post > h1 {
+      font-size: x-large;
+      margin-top: 0;
+    }
+    .post > i {
+      position: absolute;
+      right: 30px;
+      top: 15px;
+    }
+    .post:hover {
+      box-shadow: var(--md-sys-color-shadow) 2px 3px;
+    }
+  </style>
 </head>
 
 <body class="background">
@@ -24,9 +47,8 @@
   </div>
   <div class="below-header center-x">
     <div class="document on-background-text">
-      <div class="title">Title</div>
-      <div class="paragraph">Content</div>
-      <div class="spacer50"></div>
+      <h1>Recent posts</h1>
+      {{posts}}
     </div>
     </div>
   </div>
