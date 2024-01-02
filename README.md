@@ -1,8 +1,11 @@
+## TODO
+
 - [ ] Footer with links to other sites and email
-- [ ] Spirit level project
-- [ ] Minify website release and publish source on github
+~~- [ ] Spirit level project~~
+- [ ] Minify website release
+- [X] publish source on github
 - [ ] remove lightmode?
-- [ ] (Blog entries)
+- [X] (Blog entries)
 - [ ] lang attribute
 - [ ] meta description
 - [ ] keyboard navigation
