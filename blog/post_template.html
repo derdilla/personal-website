@@ -20,6 +20,18 @@
             border: 1px solid var(--md-sys-color-outline-variant);
             padding: 5px 10px;
         }
+        .article-info {
+            margin-bottom: 0.5rem;
+        }
+        .article-info > p {
+            /* align to the right and be small label*/
+            margin-top: 1px;
+            font-size: 0.75rem;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+        .article-info > h1 {
+            margin-bottom: 1px;
+        }
     </style>
 </head>
 
@@ -37,8 +49,11 @@
   </div>
   <div class="below-header center-x">
     <div class="document on-background-text">
-      {{content}}
-    </div>
+      <div class="article-info">
+        <h1>{{headline}}</h1>
+        <p>{{publish-time}}</p>
+      </div>
+      <p>{{content}}</p>
     </div>
   </div>
 </body>
