@@ -2,7 +2,7 @@ import os
 import shutil
 from datetime import date
 
-
+# Builds blog posts from markdown files in the "posts" dir to the out dir.
 def main():
     os.chdir('/'.join(__file__.split("/")[:-1]))
 
