@@ -36,8 +36,8 @@ def main():
 
         post_url_name = name[0]
 
-        post_title = f_content[0]
-        post_desc = f_content[1]
+        post_title = f_content[0].replace("\n", "")
+        post_desc = f_content[1].replace("\n", "")
         post_time = date.fromtimestamp(int(f_content[2]))
 
         post_content = ''.join(f_content[3:]).replace("\n\n", "</p><p>")
@@ -47,7 +47,10 @@ def main():
         with open(f"./out/{post_url_name}/index.html", "w") as f:
             f.write(content)
 
-        post_list.append((int(f_content[2]), f'<a href="./{post_url_name}"><div class="post"><h1>{post_title}</h1><p>{post_desc}</p><i>{post_time.strftime("B d, Y")}</i></div></a>'))
+        formatted_time = post_time.strftime("%b %d, %Y")
+        print(f' > "{post_title}" - {formatted_time}')
+        post_list.append((int(f_content[2]), f'<a href="./{post_url_name}"><div class="post"><h1>{post_title}</h1>'
+                                             f'<p>{post_desc}</p><i>{formatted_time}</i></div></a>'))
 
     print("creating index...")
     for post in sorted(post_list, key=lambda p: p[0]):
