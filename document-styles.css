@@ -1,5 +1,10 @@
 a {
     text-decoration: none;
+    color: var(--md-ref-palette-primary40);
+    font-weight: bold;
+}
+a:visited {
+    color: var(--md-ref-palette-primary70);
 }
 
 .title {

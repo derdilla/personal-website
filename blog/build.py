@@ -44,12 +44,12 @@ def main():
         formatted_time = post_time.strftime("%b %d, %Y")
 
         os.mkdir(f"./out/{post_url_name}")
-        content = template_post.replace("{{headline}}", post_title)
+        content = template_post.replace("{{description}}", post_desc)
+        content = content.replace("{{headline}}", post_title)
         content = content.replace("{{publish-time}}", formatted_time)
         content = content.replace("{{content}}", post_content)
         with open(f"./out/{post_url_name}/index.html", "w") as f:
             f.write(content)
-
 
         print(f' > "{post_title}" - {formatted_time}')
         post_list.append((int(f_content[2]), f'<a href="./{post_url_name}"><div class="post"><h1>{post_title}</h1>'
