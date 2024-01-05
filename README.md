@@ -17,3 +17,4 @@
 - [ ] alt attributes for images
 - [X] links rely on color to be distinguishable
 - [ ] https://developers.google.com/search/docs/appearance/structured-data
+- [ ] https://web.dev/articles/stick-to-compositor-only-properties-and-manage-layer-count
