@@ -22,10 +22,10 @@ html, body {
 }
 
 .document {
-    max-height: calc(100vh - var(--header-height));
-    width: 90vw;
-    max-width: 900px;
-    overflow-y: auto;
+    /* margin should be decreased when less than 90ch or width */
+    padding-left: calc((100% - min(90ch, 100%)) / 2);
+    padding-right: calc((100% - min(90ch, 100%)) / 2);
+    max-width: 90ch;
 }
 
 .spacing-panel {
@@ -114,7 +114,6 @@ html, body {
 }
 
 .below-header {
-    position: fixed;
     padding-top: var(--header-height);
 }
 

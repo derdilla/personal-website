@@ -15,7 +15,7 @@ def main():
     # Run build.py in blog and wait for it to finish, get a return code
     result = os.system("python blog/build.py")
     if result != 0:
-        print('Aborting after compilation failed of blog')
+        print('Aborting after blog build failed')
         return result
 
     shutil.copytree("blog/out", os.path.join("out/build", "blog"))
