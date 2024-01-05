@@ -31,6 +31,11 @@ def main():
             print("\033[91mMinifying failed!\033[0m")
             return result
 
+    result = os.system("python sitemapper.py")
+    if result != 0:
+        print("\033[91mSitemapping failed!\033[0m")
+        return result
+
     if '--open-webserver' in sys.argv:
         print("\033[92mOpening web server.\033[0m")
         if '--no-merge' in sys.argv:

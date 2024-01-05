@@ -22,6 +22,7 @@ def main():
     print("creating blog posts...")
     post_list = []  # [(time, html)]
     for file in os.scandir("./posts"):
+        # WARN: name has to be from file or sitemapper doesn't work
         name = file.name.split('.')
         if not (file.is_file() and len(name) == 2 and name[1] == 'blog'):
             print(f"WARNING: Ignoring unexpected file in posts folder: {file.name}")
