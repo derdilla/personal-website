@@ -53,21 +53,16 @@ html, body {
 
 @keyframes scaleup-bar {
     from {
-        left: 45%;
-        right: 45%;
-        border-radius: 40px;
-        font-size: 0;
+        transform: scaleX(0.2);
         color: transparent;
     }
     50% {
         color: transparent;
     }
-    95% {
-        border-radius: 5px;
+    90% {
+        transform: scaleX(1.01);
     }
     100% {
-        left: 0;
-        right: 0;
         border-radius: 0;
     }
 }
@@ -85,7 +80,7 @@ html, body {
 }
 @media (prefers-reduced-motion) {
     .header {
-        animation: 1s scaleup-bar;
+        animation: 0.5s scaleup-bar;
     }
 }
 
