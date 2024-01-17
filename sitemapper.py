@@ -10,7 +10,7 @@ def main():
         if name[1] != 'blog':
             continue
         posts += f'''<url>
-            <loc>https://derdilla.com/blog/{name[0]}</loc>
+            <loc>https://derdilla.com/blog/{name[0]}/</loc>
             <lastmod>{datetime.fromtimestamp(os.path.getmtime(f'blog/posts/{file_name}')).astimezone().replace(microsecond=0).isoformat()}</lastmod>
             <changefreq>yearly</changefreq>
             <priority>0.9</priority>
@@ -27,25 +27,25 @@ def main():
             <priority>0.3</priority>
         </url>
         <url>
-            <loc>https://derdilla.com/about</loc>
+            <loc>https://derdilla.com/about/</loc>
             <lastmod>{datetime.fromtimestamp(os.path.getmtime('about/index.html')).astimezone().replace(microsecond=0).isoformat()}</lastmod>
             <changefreq>yearly</changefreq>
             <priority>0.5</priority>
         </url>
         <url>
-            <loc>https://derdilla.com/faq</loc>
+            <loc>https://derdilla.com/faq/</loc>
             <lastmod>{datetime.fromtimestamp(os.path.getmtime('faq/index.html')).astimezone().replace(microsecond=0).isoformat()}</lastmod>
             <changefreq>monthly</changefreq>
             <priority>0.6</priority>
         </url>
         <url>
-            <loc>https://derdilla.com/projects</loc>
+            <loc>https://derdilla.com/projects/</loc>
             <lastmod>{datetime.fromtimestamp(os.path.getmtime('projects/index.html')).astimezone().replace(microsecond=0).isoformat()}</lastmod>
             <changefreq>monthly</changefreq>
             <priority>0.8</priority>
         </url>
         <url>
-            <loc>https://derdilla.com/blog</loc>
+            <loc>https://derdilla.com/blog/</loc>
             <lastmod>{datetime.fromtimestamp(os.path.getmtime('blog')).astimezone().replace(microsecond=0).isoformat()}</lastmod>
             <changefreq>daily</changefreq>
             <priority>1.0</priority>
@@ -57,7 +57,6 @@ def main():
     print('\033[94mWriting sitemap to out/sitemap.xml...\033[0m')
     with open('out/sitemap.xml', 'w') as f:
         f.write(map)
-
 
 
 if  __name__ == '__main__':
