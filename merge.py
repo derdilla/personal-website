@@ -14,6 +14,8 @@ def main():
                 save_path = file_path.replace('out/build', 'out/merged')
                 process_html_file(file_path, save_path)
 
+    shutil.copytree('media', 'out/merged/media')
+
 
 def process_html_file(file_path, save_path):
     with open(file_path, 'r', encoding='utf-8') as file:

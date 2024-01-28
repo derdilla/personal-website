@@ -1,6 +1,8 @@
 import os
+import re
 import shutil
 from datetime import date
+
 
 # Builds blog posts from markdown files in the "posts" dir to the out dir.
 def main():
@@ -41,7 +43,18 @@ def main():
         post_desc = f_content[1].replace("\n", "")
         post_time = date.fromtimestamp(int(f_content[2]))
 
-        post_content = ''.join(f_content[3:]).replace("\n\n", "</p><p>")
+        # markdown multiline code block support
+        code_block_pattern = re.compile(r'```(?:[a-zA-Z]+)?\n(.*?)\n```', re.DOTALL)
+        post_content = code_block_pattern.sub(r'<pre><code>\1</code></pre>', ''.join(f_content[3:]))
+
+        # inline comments
+        post_content = re.sub(r'`(.*?)`', r'<code>\1</code>', post_content)
+
+        #  links
+        post_content = re.sub(r'\[(.*?)]\((.*?)\)', r'<a href="\2">\1</a>', post_content)
+
+        # paragraphs
+        post_content = post_content.replace("\n\n", "</p><p>")
         formatted_time = post_time.strftime("%b %d, %Y")
 
         os.mkdir(f"./out/{post_url_name}")

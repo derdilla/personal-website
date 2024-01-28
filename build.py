@@ -21,7 +21,7 @@ def main():
     shutil.copytree("blog/out", os.path.join("out/build", "blog"))
 
     # copy file to output
-    for folder_name in ["about", "faq", "material", "projects"]:
+    for folder_name in ["about", "faq", "material", "projects", "media"]:
         shutil.copytree(folder_name, os.path.join("out/build", folder_name))
     for file_name in ["index.html", "style.css", "document-styles.css", "base-page-style.css"]:
         shutil.copy(file_name, os.path.join("out/build", file_name))

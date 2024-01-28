@@ -12,7 +12,12 @@ def main():
             save_path = file_path.replace('out/merged', 'out/minified')
             minify_html_file(file_path, save_path)
 
+
+    shutil.copytree('media', 'out/minified/media')
+
 def minify_html_file(file_path, save_path):
+    if not file_path.endswith('html'):
+        return
     with open(file_path, 'r', encoding='utf-8') as file:
         html_string = file.read()
 
