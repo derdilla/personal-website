@@ -45,6 +45,12 @@ def main():
             <priority>0.8</priority>
         </url>
         <url>
+            <loc>https://derdilla.com/timelineEditor/</loc>
+            <lastmod>2024-01-26T17:44:00+01:00</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.6</priority>
+        </url>
+        <url>
             <loc>https://derdilla.com/blog/</loc>
             <lastmod>{datetime.fromtimestamp(os.path.getmtime('blog')).astimezone().replace(microsecond=0).isoformat()}</lastmod>
             <changefreq>daily</changefreq>
