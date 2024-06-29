@@ -1,6 +1,6 @@
 ## TODO
 
-- [ ] Footer with links to other sites and email
+- [X] Footer with links to other sites and email
 ~~- [ ] Spirit level project~~
 - [X] Minify website release
 - [X] publish source on github
