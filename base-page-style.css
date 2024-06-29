@@ -9,6 +9,9 @@ html, body {
     background-color: var(--md-sys-color-background);
     color: var(--md-sys-color-on-background);
     height: 100vh;
+    position: absolute;
+    left: 0;
+    right: 0;
 }
 
 .centered {
