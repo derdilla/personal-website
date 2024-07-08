@@ -88,6 +88,9 @@ html, body {
     }
 }
 
+.header a:visited {
+    color: var(--md-sys-color-on-primary-container) !important;                                                 }
+
 .header-title {
     all: unset;
     position: absolute;
