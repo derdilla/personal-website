@@ -1,0 +1,9 @@
+template: base-page.html
+
+steps:
+  - "Create blog overview":
+      content: "{{ components/blog }}"
+      posts:
+        type: index
+        path: blog/
+        itemTemplate: "{{ components/blog-post }}"
