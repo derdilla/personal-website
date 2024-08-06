@@ -1,7 +1,9 @@
 use std::env;
-use std::fs;
-use std::path::{Path, PathBuf};
-use std::collections::HashMap;
+use std::path::PathBuf;
+use crate::source_dir::{SourceDir, SourceDirOpenError};
+
+mod source_dir;
+mod page_builder;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -9,6 +11,18 @@ fn main() {
         print_usage();
         return;
     }
+
+    let command = &args[1];
+    let command = match command.as_str() {
+        "assemble" => Command::Assemble,
+        "pack" => Command::Pack,
+        "compile" => Command::Compile,
+        _ => {
+            eprintln!("Unknown command: {command}");
+            print_usage();
+            return;
+        },
+    };
 
     let working_dir = if args.len() >= 3 {
         let path = PathBuf::from(&args[2]);
@@ -22,18 +36,31 @@ fn main() {
         env::current_dir().expect("Can't access current working directory")
     };
 
+    println!("Reading data from '{}'...", &working_dir.to_str().unwrap());
 
-    let command = &args[1];
-    match command.as_str() {
-        "assemble" => assemble(),
-        "pack" => pack(),
-        "compile" => compile(),
-        _ => {
-            eprintln!("Unknown command: {command}");
-            print_usage();
-        },
+    let source = SourceDir::load(working_dir);
+    if let Err(err) = &source {
+        match err {
+            SourceDirOpenError::MissingFile(f) => eprintln!("Couldn't read file: {f}"),
+            SourceDirOpenError::NoSuchDirectory(d) => eprintln!("No such directory: {d}"),
+        }
+        return;
     }
+    let source = source.unwrap();
 
+    // TODO:
+    // Fail on:
+    // - Variables without value
+    // - Missing css classes or tags
+    // Warn on:
+    // - Unused files
+    // - Missing index.html
+}
+
+enum Command {
+    Assemble,
+    Pack,
+    Compile,
 }
 
 fn print_usage() {
