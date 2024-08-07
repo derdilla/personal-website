@@ -1,14 +1,14 @@
 template: base-page.html
 
 steps:
-  - "Setup blog template":
-      title: Hacking window movement
-      content: "{{ components/blog-entry }}"
-  - "Fill data":
-      description: A short tale on the joy of microprojects.
-      timestamp:
-        type: unixTimestamp
-        value: 1706394048
-      content:
-        type: md
-        path: blog/kinetic-windows.blog
+  - "Setup blog template": null
+    title: Hacking window movement
+    content: "{{ components/blog-entry }}"
+  - "Fill data": null
+    description: A short tale on the joy of microprojects.
+    timestamp:
+      type: unixTimestamp
+      value: 1706394048
+    text:
+      type: md
+      path: blog/kinetic-windows.blog
