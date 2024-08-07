@@ -1,8 +1,9 @@
 use std::collections::HashMap;
-use std::fmt::{Display, format, Formatter};
+use std::fmt::Display;
 use std::fs;
 use std::path::PathBuf;
-use either::Either;
+
+use crate::fs_tree::FsTree;
 
 /// Source files loaded into memory.
 ///
@@ -10,23 +11,23 @@ use either::Either;
 #[derive(Debug)]
 pub struct SourceDir {
     /// Contents of the website.yml file.
-    website_yml: String,
+    pub website_yml: String,
 
     /// Template file names and content.
     ///
     /// Example entry: `"base-page.html", "<!DOCTYPE html>..."`
-    templates: HashMap<String, String>,
+    pub templates: HashMap<String, String>,
 
     /// Component ids and file content.
     ///
     /// Example entry: `"footer", "<footer>...</footer>"`
-    components: HashMap<String, String>,
+    pub components: HashMap<String, String>,
 
-    layout_css: String,
+    pub layout_css: String,
 
-    style_css: String,
+    pub style_css: String,
 
-    pages: FsTree,
+    pub pages: FsTree,
 }
 
 impl SourceDir {
@@ -123,39 +124,4 @@ pub enum SourceDirOpenError {
     MissingFile(String),
     NoSuchDirectory(String),
 
-}
-
-#[derive(Debug)]
-pub struct FsTree {
-    /// If this is a file: this is the content if this is a dir these are the
-    /// children.
-    child: Either<String, Vec<FsTree>>,
-}
-
-impl FsTree {
-    fn load(path: &PathBuf) -> Self {
-        // TODO: don't panic on error
-        if path.is_file() {
-            let content = fs::read_to_string(&path)
-                .expect(format!("Couldn't read {}", &path.to_str().unwrap()).as_str());
-            FsTree {
-                child: Either::Left(content),
-            }
-        } else if path.is_dir() {
-            let read_dir = fs::read_dir(&path)
-                .expect(format!("Couldn't read {}", &path.to_str().unwrap()).as_str());
-            let mut children = Vec::new();
-            for e in read_dir {
-                let e = e.expect(format!("Couldn't read {}", &path.to_str().unwrap()).as_str());
-                children.push(FsTree::load(&e.path()));
-            }
-            FsTree {
-                child: Either::Right(children),
-            }
-        } else {
-            panic!("Can't handle symlink at {}", &path.to_str().unwrap())
-        }
-    }
-
-    // TODO: add pub util getters.
 }

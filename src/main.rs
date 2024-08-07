@@ -1,9 +1,12 @@
 use std::env;
 use std::path::PathBuf;
+use crate::ir::IR;
 use crate::source_dir::{SourceDir, SourceDirOpenError};
 
 mod source_dir;
 mod page_builder;
+mod ir;
+mod fs_tree;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -47,6 +50,7 @@ fn main() {
         return;
     }
     let source = source.unwrap();
+    let source = IR::new(source).unwrap();
 
     // TODO:
     // Fail on:
