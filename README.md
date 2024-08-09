@@ -59,7 +59,7 @@ steps:
         type: unixTimestamp
         value: 1706394048
       content:
-        type: md
+        type: Md
         path: blog/kinetic-windows.blog
 ```
 
@@ -71,7 +71,7 @@ At the end of steps there must be no unresolved variables.
 |---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | text          | Raw text to directly insert.                                                                                                                                                                                                                                                                          |
 | unixTimestamp | Unix timestamp in seconds. Creates `date` and `datetime` variable if not present.                                                                                                                                                                                                                     |
-| md            | Text in markdown format.                                                                                                                                                                                                                                                                              |
+| Md            | Text in markdown format.                                                                                                                                                                                                                                                                              |
 | index         | Requires a directory in the `path` argument. Performs the specified `steps` in every .yml file (except index.yml) in the specified directory on any *component* specified in a custom `itemTemplate` key. Additionally provides a `link` variable that links to the article generated for that item.  |
 
 ## CSS

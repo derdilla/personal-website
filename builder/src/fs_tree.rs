@@ -1,9 +1,9 @@
-use std::ffi::OsStr;
 use std::fs;
 use std::path::PathBuf;
 
 use either::Either;
 use yaml_rust2::{Yaml, YamlLoader};
+use crate::builder::{BuildProcedure, BuildProcedureLoadError};
 
 #[derive(Debug)]
 pub struct FsTree {
@@ -43,15 +43,14 @@ impl FsTree {
     pub fn parse(self) -> Result<ParsedFsTree, ParsedFsTreeParseError> {
         match self.child {
             Either::Left(content) => {
-                let content = match PathBuf::from(&self.entry_name).extension() {
+                let content = match PathBuf::from(&self.entry_name).extension().and_then(|e|e.to_str()) {
                     None => Ok(ParsedFsEntry::TextFile(content)),
-                    Some(OsStr::new("yml")) => {
-                        match YamlLoader::load_from_str(content.as_str()) {
-                            Ok(yaml) => Ok(ParsedFsEntry::YamlFile(yaml)),
-                            Err(err) => Err(ParsedFsTreeParseError::InvalidYaml(err)),
+                    Some("yml") => {
+                        match BuildProcedure::new(content.as_str()) {
+                            Ok(procedure) => Ok(ParsedFsEntry::BuildProcedure(procedure)),
+                            Err(err) => Err(ParsedFsTreeParseError::InvalidBuildProcedure(PathBuf::from(&self.entry_name), err)),
                         }
                     },
-                    Some(OsStr::new("md")) => Ok(ParsedFsEntry::Markdown(content)),
                     Some(_) => Ok(ParsedFsEntry::TextFile(content)),
                 }?;
                 Ok(ParsedFsTree {
@@ -86,12 +85,60 @@ pub struct ParsedFsTree {
 pub enum ParsedFsEntry {
     Directory(Vec<ParsedFsTree>),
     TextFile(String),
-    YamlFile(Vec<Yaml>),
-    /// Contents of a markdown file. No validation required
-    Markdown(String),
+    BuildProcedure(BuildProcedure),
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub enum ParsedFsTreeParseError {
-    InvalidYaml(yaml_rust2::ScanError)
+    InvalidBuildProcedure(PathBuf, BuildProcedureLoadError)
+}
+
+impl ParsedFsTree {
+    /// Gather all files with a matching [file_extension] and return their paths and content.
+    ///
+    /// Paths are relative to this [ParsedFsTree]s parent directory.
+    pub fn filter(&self, file_extension: &str) -> Vec<(PathBuf, ParsedFsEntry)> {
+        let path = PathBuf::from(&self.name);
+        match &self.content {
+            ParsedFsEntry::Directory(children) => children.iter()
+                .flat_map(|c| c
+                    .filter(file_extension)
+                    .iter()
+                    .map(|(child_path, entry)| (path.join(child_path), entry.clone()))
+                    .collect::<Vec<_>>()
+                )
+                .collect::<Vec<(PathBuf, ParsedFsEntry)>>()
+            ,
+            content => {
+                if path.extension().is_some_and(|e| e.to_str().is_some_and(|e| e == file_extension)) {
+                    vec![(path, content.clone())]
+                } else {
+                    Vec::new()
+                }
+            },
+        }
+    }
+
+    pub fn get(&self, path: &String) -> Option<ParsedFsEntry> {
+        if &self.name == path { // only happens at the end
+            Some(self.content.clone())
+        } else if let ParsedFsEntry::Directory(children) = &self.content {
+            let mut path_parts = path.splitn(2, '/');
+            let dir_name = path_parts.next();
+            let path= path_parts.next();
+            if dir_name.is_some() && path.is_some() && self.name.as_str() == dir_name.unwrap() {
+                let path = path.unwrap().to_string();
+                for e in children {
+                    let e = e.get(&path);
+                    if e.is_some() {
+                        return e;
+                    }
+                }
+            }
+
+            None
+        } else {
+            None
+        }
+    }
 }

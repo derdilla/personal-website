@@ -5,9 +5,10 @@ use std::fmt::Debug;
 use lewp_css::Stylesheet;
 use scraper::Html;
 use yaml_rust2::{Yaml, YamlLoader};
+use crate::builder::Value;
 
-use crate::fs_tree::{ParsedFsTree, ParsedFsTreeParseError};
-use crate::source_dir::{FsTree, SourceDir};
+use crate::fs_tree::{FsTree, ParsedFsTree, ParsedFsTreeParseError};
+use crate::source_dir::SourceDir;
 
 /// Intermediate representation of the [SourceDir].
 pub struct IR {
@@ -154,6 +155,45 @@ impl FwHTML {
             used_class_names: classes,
         })
     }
+
+    /// Inserts components and variables as long as possible.
+    pub fn resolved(&self, components: &HashMap<String, FwHTML>, variables: &HashMap<&String, String>) -> Self {
+        // TODO: proper error propagation
+        let mut html = self.data.clone();
+
+        for comp_name in &self.used_components {
+            let comp = components.get(comp_name);
+            let comp = comp.expect(format!("Missing component when resolving template: {}", comp_name).as_str());
+            html = html.replace(format!("{{{{ components/{comp_name} }}}}").as_str(), comp.data.as_str());
+        }
+
+        for var_name in &self.used_variables {
+            if let Some(var) = variables.get(var_name) {
+                // TODO: use proper var building (e.g. support md, ...)
+                html = html.replace(format!("{{{{ {var_name} }}}}").as_str(), var.as_str());
+            } else {
+                eprintln!("Unable to resolve var: {var_name}");
+            }
+        }
+
+        // TODO: is this ok or should I use ::template?
+        let mut new = Self::new(html).unwrap();
+        while new.used_variables.iter().any(|e| variables.contains_key(e))
+            || new.used_components.iter().any(|e| components.contains_key(e)) {
+            let tmp = variables.clone();
+            //println!("{:?}", &new.used_variables.iter().filter(|e| tmp.contains_key(e.clone())));
+            println!("{:?}", new.data);
+            new = new.resolved(&components, &variables);
+            new = Self::new(new.data).unwrap()
+        }
+
+        new
+    }
+
+    pub fn output(&self) -> String {
+        // TODO: validate
+        self.data.clone()
+    }
 }
 
 #[derive(Debug)]
@@ -165,6 +205,7 @@ pub enum FwHTMLError {
 
 mod analyzer {
     use ego_tree::iter::Edge;
+    use itertools::Itertools;
     use once_cell::sync::Lazy;
     use regex::Regex;
 
@@ -182,13 +223,13 @@ mod analyzer {
         classes
     }
 
-    static VAR_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"\{\{ (\w*) }}")
+    static VAR_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"\{\{ ([\w\-_]*) }}")
         .expect("Failed to compile classes regex"));
     pub fn used_variables(html: &str) -> Vec<String> {
         extract_regex_captures(&VAR_REGEX, html)
     }
 
-    static COMP_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"\{\{ components/(\w*) }}")
+    static COMP_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"\{\{ components/([\w\-_]*) }}")
         .expect("Failed to compile classes regex"));
     pub fn used_components(html: &str) -> Vec<String> {
         extract_regex_captures(&COMP_REGEX, html)
@@ -199,6 +240,7 @@ mod analyzer {
             .map(|e| e.get(1))
             .filter(|e| e.is_some())
             .map(|e| e.unwrap().as_str().to_string())
+            .sorted().dedup()
             .collect::<Vec<String>>()
     }
 }
