@@ -1,12 +1,9 @@
-use std::collections::HashMap;
 use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
-use std::time::Instant;
-use yaml_rust2::{Yaml, yaml};
-use crate::builder::{BuildProcedure, BuildProcedureBuildError};
+use crate::builder::{BuildProcedureBuildError};
 use crate::fs_tree::ParsedFsEntry;
-use crate::ir::{FwHTML, IR};
+use crate::ir::{IR};
 
 pub struct Website {
     pages: Vec<(PathBuf, String)>,

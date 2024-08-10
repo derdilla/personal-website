@@ -1,10 +1,10 @@
 template: base-page.html
 
 steps:
-  - "Setup blog template": null
+  - "Setup blog template":
     title: Hacking window movement
     content: "{{ components/blog-entry }}"
-  - "Fill data": null
+  - "Fill data":
     description: A short tale on the joy of microprojects.
     time:
       type: unixTimestamp

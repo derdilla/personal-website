@@ -120,7 +120,7 @@ pub struct CssParseError {
     error_class: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct FwHTML {
     /// Raw html as present in the template
     data: String,
@@ -157,7 +157,10 @@ impl FwHTML {
     }
 
     /// Inserts components and variables as long as possible.
-    pub fn resolved(&self, components: &HashMap<String, FwHTML>, variables: &HashMap<&String, String>) -> Self {
+    pub fn resolved<F>(&self, components: &HashMap<String, FwHTML>, variables: &HashMap<&String, F>) -> Self
+    where
+        F: Fn() -> Option<String>,
+    {
         // TODO: proper error propagation
         let mut html = self.data.clone();
 
@@ -169,6 +172,7 @@ impl FwHTML {
 
         for var_name in &self.used_variables {
             if let Some(var) = variables.get(var_name) {
+                let var = var().unwrap();
                 // TODO: use proper var building (e.g. support md, ...)
                 html = html.replace(format!("{{{{ {var_name} }}}}").as_str(), var.as_str());
             } else {

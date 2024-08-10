@@ -1,5 +1,6 @@
 use std::cmp::PartialEq;
 use std::collections::HashMap;
+use std::fmt::format;
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use crate::fs_tree::ParsedFsEntry;
@@ -29,6 +30,7 @@ pub enum Value {
     },
     Index {
         path: String,
+        /// Name of a *component*.
         item_template: String,
     },
 }
@@ -71,23 +73,19 @@ impl BuildProcedure {
         })
     }
 
-    pub fn execute(&self, data: &IR) -> Result<String, BuildProcedureBuildError> {
-        let mut template: FwHTML = match data.templates.get(&self.template) {
+    pub fn execute(&self, data: &IR,) -> Result<String, BuildProcedureBuildError> {
+        let template: FwHTML = match data.templates.get(&self.template) {
             None => return Err(BuildProcedureBuildError::TemplateNotFound(self.template.clone())),
-            Some(template) => template.resolved(&data.components, &HashMap::new()),
+            Some(template) => template.clone(),
         };
+        self.execute_with_template_override(data, template)
+    }
+
+    pub fn execute_with_template_override(&self, data: &IR, mut template: FwHTML) -> Result<String, BuildProcedureBuildError> {
         let mut vars = HashMap::new();
         for step in &self.steps {
-            let step_vars = step.vars.iter()
-                .map(|(k, v)| (k, v.generate(&data)));
-            if step_vars.clone().any(|(k, v)| v.is_none()) {
-                if let Some((var_name, _)) = step_vars.clone().filter(|(k, v)| v.is_none()).collect::<Vec<_>>().first() {
-                    return Err(BuildProcedureBuildError::CantResolveVars(step.name.clone(), var_name.clone().clone()))
-                }
-            }
-
-            let mut step_vars = step_vars
-                .map(|(k, v)| (k, v.unwrap()));
+            let mut step_vars = step.vars.iter()
+                .map(|(k, v)| (k, || v.generate(&data)));
             vars.extend(&mut step_vars);
 
             template = template.resolved(&data.components, &vars);
@@ -119,7 +117,6 @@ impl Value {
         match self {
             Value::Text(txt) => Some(txt.clone()),
             Value::Int(val) => Some(val.to_string()),
-            // TODO: make timestamp return one good html element
             Value::UnixTimestamp { value } => {
                 let timestamp = chrono::DateTime::from_timestamp(*value as i64, 0).expect("out-of-range timestamp");
 
@@ -138,9 +135,25 @@ impl Value {
                     None
                 }
             }
-            Value::Index { .. } => {
-                // TODO
-                None
+            Value::Index { path, item_template } => {
+                let dir = data.pages.get(&format!("pages/{path}").to_string())?;
+                if let ParsedFsEntry::Directory(children) = dir {
+                    let mut html = String::new();
+                    for child in children {
+                        if let ParsedFsEntry::BuildProcedure(proc) = child.content {
+                            if child.name == String::from("index.yml") {
+                                continue;
+                            }
+                            let template = data.components.get(item_template)?;
+                            let element_html = proc.execute_with_template_override(data, template.clone()).unwrap();
+                            // FIXME: component not found as template -> make template string
+                            html += format!("\n{}", element_html).as_str();
+                        }
+                    }
+                    Some(html)
+                } else {
+                    None
+                }
             }
         }
     }
@@ -182,6 +195,7 @@ mod loader {
         },
         Index {
             path: String,
+            #[serde(rename="itemTemplate")]
             item_template: String,
         },
     }

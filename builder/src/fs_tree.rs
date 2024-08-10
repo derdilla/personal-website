@@ -77,8 +77,8 @@ impl FsTree {
 
 #[derive(Debug, Clone)]
 pub struct ParsedFsTree {
-    name: String,
-    content: ParsedFsEntry,
+    pub name: String,
+    pub content: ParsedFsEntry,
 }
 
 #[derive(Debug, Clone)]
