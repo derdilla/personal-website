@@ -104,6 +104,6 @@ and *assemble*d to the `/index.html` and `/blog/index.html` paths respectively
 # TODO:
 
 - define top level config file
-- write builder
 - meta descriptions
 - navbar
+- sort blog posts in index

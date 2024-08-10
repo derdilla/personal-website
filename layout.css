@@ -1,4 +1,52 @@
+body {
+    margin: 0;
+}
+
+main {
+    padding-left: 10vw;
+    padding-right: 10vw;
+}
+
+main + footer {
+    padding: 1em;
+    width: 100vw;
+}
+
+footer > address {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+footer > address > * {
+    transform: translateX(-50%);
+}
+
+/* headlines with publishing date */
+header > h2:has(+time) {
+    margin-bottom: -0.2em;
+}
+/* dates after headlines */
+header > h2 + time {
+    margin-left: 0.2em;
+    font-size: small;
+}
+
 .layout-link-button {
-    padding: 4px;
+    padding: 4px 4px 4px 1em;
+    width: 100%;
+    display: block;
     /* TODO */
+}
+
+.blog > article {
+    margin-bottom: 2em;
+    border-left-width: 3px;
+    border-left-style: solid;
+    padding-left: 4px;
+}
+
+.blog p {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
 }

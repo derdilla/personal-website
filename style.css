@@ -1,0 +1,42 @@
+html, body {
+    background: #000;
+    color: #FFF;
+}
+
+a {
+    color: #3dbeff;
+}
+
+a:visited {
+    color: #6deeff;
+}
+
+main + footer {
+    background: #1b1b1b;
+}
+
+/*.layout-link-button {
+    background: #3dbeff;
+    color: #000000;
+    border-radius: 10px;
+}
+.layout-link-button:hover {
+    background: linear-gradient(-45deg, #3dbeff 20%, #5fafd9 50%, #3dbeff 80%);
+    background-size: 30%;
+    animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+    from {
+        background-position-x: 0%;
+    }
+    to {
+        background-position-x: 100%;
+    }
+}*/
+
+.blog > article {
+    border-left-color: #3dbeff;
+    border-radius: 1px;
+}
+
