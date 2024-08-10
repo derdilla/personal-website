@@ -6,7 +6,7 @@ steps:
     content: "{{ components/blog-entry }}"
   - "Fill data":
     description: Here is how I found out that the AOSP has 2.5 million lines of code.
-    timestamp:
+    time:
       type: unixTimestamp
       value: 1704204000
     text:

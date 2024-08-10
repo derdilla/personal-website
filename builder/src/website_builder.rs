@@ -47,7 +47,7 @@ impl Website {
 
         for (sub_path, content) in &self.pages {
             println!("sub_path {}", content);
-            Self::write_string_to_pathbuf(sub_path, content).unwrap();
+            Self::write_string_to_pathbuf(&out.join(sub_path), content).unwrap();
         }
         true
     }

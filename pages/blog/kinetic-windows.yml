@@ -6,7 +6,7 @@ steps:
     content: "{{ components/blog-entry }}"
   - "Fill data": null
     description: A short tale on the joy of microprojects.
-    timestamp:
+    time:
       type: unixTimestamp
       value: 1706394048
     text:

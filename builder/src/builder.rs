@@ -121,10 +121,11 @@ impl Value {
             Value::Int(val) => Some(val.to_string()),
             // TODO: make timestamp return one good html element
             Value::UnixTimestamp { value } => {
-                let str = chrono::DateTime::from_timestamp(*value as i64, 0)
-                    .expect("Invalid timestamp")
-                    .format("%Y-%m-%d %H:%M").to_string();
-                Some(str)
+                let timestamp = chrono::DateTime::from_timestamp(*value as i64, 0).expect("out-of-range timestamp");
+
+                let formal = timestamp.to_rfc3339();
+                let pretty = timestamp.format("%Y-%m-%d").to_string(); // TODO:
+                Some(format!("<time datetime=\"{formal}\">{pretty}</time>").to_string())
             },
             Value::Md { path } => {
                 if let Some(ParsedFsEntry::TextFile(md)) = data.pages.get(&format!("pages/{path}").to_string()) {
