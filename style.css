@@ -40,3 +40,13 @@ main + footer {
     border-radius: 1px;
 }
 
+.layout-link-button::after {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    background: url('/assets/btn-progress.svg') 1em 0 no-repeat;
+    background-size: contain;
+}
+

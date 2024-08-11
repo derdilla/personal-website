@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::fs;
+use std::{fs, io};
 use std::path::PathBuf;
 
 use crate::fs_tree::FsTree;
@@ -27,6 +27,8 @@ pub struct SourceDir {
     pub style_css: String,
 
     pub pages: FsTree,
+
+    pub static_files: Vec<(PathBuf, String)>
 }
 
 impl SourceDir {
@@ -37,7 +39,11 @@ impl SourceDir {
         let components = Self::read_components(&root)?;
         let layout = Self::read_layout(&root)?;
         let style = Self::read_style(&root)?;
-        let pages = FsTree::load(&root.join("pages")); // TODO
+        let pages = FsTree::load(&root.join("pages"));
+        let mut static_files = Vec::new();
+        if let Err(_) =  Self::collect_files(root.join("static"), &root.join("static"), &mut static_files) {
+            return Err(SourceDirOpenError::NoSuchDirectory(String::from("static")));
+        }
 
         Ok(SourceDir {
             website_yml,
@@ -46,6 +52,7 @@ impl SourceDir {
             layout_css: layout,
             style_css: style,
             pages,
+            static_files,
         })
     }
 
@@ -115,6 +122,27 @@ impl SourceDir {
             }
         };
         Ok(loaded_files)
+    }
+
+    /// Recursively read all files relative to a root dir
+    fn collect_files(dir: PathBuf, prefix_dir: &PathBuf, files: &mut Vec<(PathBuf, String)>) -> io::Result<()> {
+        for entry in dir.read_dir()? {
+            let entry = entry?;
+            let path = entry.path();
+
+            if path.is_dir() {
+                Self::collect_files(path, &prefix_dir, files)?;
+            } else if path.is_file() {
+                let mut file_content = fs::read_to_string(&path)?;
+                let path = path.canonicalize().unwrap();
+                let pre = prefix_dir.canonicalize().unwrap();
+                let relative_path = path.strip_prefix(pre).expect("couldn't follow paths").to_path_buf();
+
+                files.push((relative_path, file_content));
+            }
+        }
+
+        Ok(())
     }
 }
 

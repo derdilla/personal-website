@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, fs};
 use std::path::PathBuf;
 
 use crate::ir::IR;
@@ -55,6 +55,9 @@ fn main() {
     let source = source.unwrap();
     let source = IR::new(source).unwrap();
     let website = Website::build(&source).unwrap();
+    if PathBuf::from("out").exists() {
+        fs::remove_dir_all("out").unwrap();
+    }
     website.write(&PathBuf::from("out"));
 
     // TODO:

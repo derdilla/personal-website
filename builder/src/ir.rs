@@ -1,6 +1,8 @@
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::fmt::Debug;
+use std::{fs, io};
+use std::path::PathBuf;
 
 use lewp_css::Stylesheet;
 use scraper::Html;
@@ -19,11 +21,13 @@ pub struct IR {
 
     pub components: HashMap<String, FwHTML>,
 
-    pub layout_css: Stylesheet,
+    pub layout_css: String,
 
-    pub style_css: Stylesheet,
+    pub style_css: String,
 
     pub pages: ParsedFsTree,
+
+    pub static_assets: Vec<(PathBuf, String)>,
 }
 
 impl IR {
@@ -31,18 +35,17 @@ impl IR {
         let config = Self::load_config(data.website_yml.as_str())?;
         let templates = Self::load_templates(data.templates)?;
         let components = Self::load_components(data.components)?;
-        let layout_css = Self::load_css(data.layout_css.as_str(), "layout.css")?;
-        let style_css = Self::load_css(data.style_css.as_str(), "style.css")?;
         let pages = Self::load_pages(data.pages)?;
-        // TODO: validate pages tree
+        // TODO: validate pages tree and css
 
         Ok(IR{
             config,
             templates,
             components,
-            layout_css,
-            style_css,
+            layout_css: data.layout_css,
+            style_css: data.style_css,
             pages,
+            static_assets: data.static_files,
         })
     }
 

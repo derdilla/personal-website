@@ -14,10 +14,9 @@ impl Website {
         let mut build_pages = Vec::new();
 
         println!("Copying static assets:");
-        // TODO: move to IR code
-        Self::collect_files(PathBuf::from("../static"), &PathBuf::from("../static/"), &mut build_pages).unwrap();
-        build_pages.push((PathBuf::from("layout.css"), fs::read_to_string("../layout.css").unwrap()));
-        build_pages.push((PathBuf::from("style.css"), fs::read_to_string("../style.css").unwrap()));
+        build_pages.append(&mut source.static_assets.clone());
+        build_pages.push((PathBuf::from("layout.css"), source.layout_css.clone()));
+        build_pages.push((PathBuf::from("style.css"),  source.style_css.clone()));
 
         println!("Building pages:");
         let build_scripts = source.pages.filter("yml");
@@ -62,27 +61,6 @@ impl Website {
 
         let mut file = fs::File::create(path)?;
         file.write_all(content.as_bytes())?;
-        Ok(())
-    }
-
-    /// Recursively read all files relative to a root dir
-    fn collect_files(dir: PathBuf, prefix_dir: &PathBuf, files: &mut Vec<(PathBuf, String)>) -> io::Result<()> {
-        for entry in dir.read_dir()? {
-            let entry = entry?;
-            let path = entry.path();
-
-            if path.is_dir() {
-                Self::collect_files(path, &prefix_dir, files)?;
-            } else if path.is_file() {
-                let mut file_content = fs::read_to_string(&path)?;
-                let path = path.canonicalize().unwrap();
-                let pre = prefix_dir.canonicalize().unwrap();
-                let relative_path = path.strip_prefix(pre).expect("couldn't follow paths").to_path_buf();
-
-                files.push((relative_path, file_content));
-            }
-        }
-
         Ok(())
     }
 }

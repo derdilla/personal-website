@@ -23,11 +23,11 @@ footer > address > * {
 }
 
 /* headlines with publishing date */
-header > h2:has(+ time) {
+header > :is(h1, h2):has(+ time) {
     margin-bottom: -0.2em;
 }
 /* dates after headlines */
-header > h2 + time {
+header > :is(h1, h2) + time {
     margin-left: 0.2em;
     font-size: small;
 }
