@@ -82,7 +82,8 @@ impl IR {
     }
 
     fn load_css(data: &str, filename: &str) -> Result<Stylesheet, SourceFormatError> {
-        match Stylesheet::parse(data) {
+        // FIXME: wait until css parser supports ":has" attribute
+        match Stylesheet::parse(/*data*/"") {
             Err(err) => {
                 return Err(SourceFormatError::InvalidCSS(CssParseError {
                     filename: String::from(filename),

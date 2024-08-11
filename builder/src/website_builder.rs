@@ -1,5 +1,5 @@
-use std::fs;
-use std::io::Write;
+use std::{fs, io};
+use std::io::{Read, Write};
 use std::path::PathBuf;
 use crate::builder::{BuildProcedureBuildError};
 use crate::fs_tree::ParsedFsEntry;
@@ -12,17 +12,23 @@ pub struct Website {
 impl Website {
     pub fn build(source: &IR) -> Result<Self, BuildProcedureBuildError> {
         let mut build_pages = Vec::new();
+
+        println!("Copying static assets:");
+        // TODO: move to IR code
+        Self::collect_files(PathBuf::from("../static"), &PathBuf::from("../static/"), &mut build_pages).unwrap();
+        build_pages.push((PathBuf::from("layout.css"), fs::read_to_string("../layout.css").unwrap()));
+        build_pages.push((PathBuf::from("style.css"), fs::read_to_string("../style.css").unwrap()));
+
+        println!("Building pages:");
         let build_scripts = source.pages.filter("yml");
         let total = build_scripts.len();
         for (mut path, build_script) in build_scripts {
             if let ParsedFsEntry::BuildProcedure(build_script) = build_script {
                 path.set_extension("html");
-                println!("> {}", &path.to_str().unwrap());
-                println!(" building...");
+                println!("> {} ({} / {})", &path.to_str().unwrap(), &build_pages.len(), &total);
                 let html = build_script.execute(&source)?;
 
                 build_pages.push((path, html));
-                println!(" build {} / {} pages", &build_pages.len(), &total);
             }
         }
 
@@ -56,6 +62,27 @@ impl Website {
 
         let mut file = fs::File::create(path)?;
         file.write_all(content.as_bytes())?;
+        Ok(())
+    }
+
+    /// Recursively read all files relative to a root dir
+    fn collect_files(dir: PathBuf, prefix_dir: &PathBuf, files: &mut Vec<(PathBuf, String)>) -> io::Result<()> {
+        for entry in dir.read_dir()? {
+            let entry = entry?;
+            let path = entry.path();
+
+            if path.is_dir() {
+                Self::collect_files(path, &prefix_dir, files)?;
+            } else if path.is_file() {
+                let mut file_content = fs::read_to_string(&path)?;
+                let path = path.canonicalize().unwrap();
+                let pre = prefix_dir.canonicalize().unwrap();
+                let relative_path = path.strip_prefix(pre).expect("couldn't follow paths").to_path_buf();
+
+                files.push((relative_path, file_content));
+            }
+        }
+
         Ok(())
     }
 }

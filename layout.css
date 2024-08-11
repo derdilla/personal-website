@@ -23,7 +23,7 @@ footer > address > * {
 }
 
 /* headlines with publishing date */
-header > h2:has(+time) {
+header > h2:has(+ time) {
     margin-bottom: -0.2em;
 }
 /* dates after headlines */
