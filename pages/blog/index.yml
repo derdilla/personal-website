@@ -4,6 +4,7 @@ steps:
   - "Create blog overview":
     title: "Blog"
     content: "{{ components/blog }}"
+    meta-description: "Blog posts and ramblings of tech-nerd derdilla"
     posts:
       type: index
       path: blog

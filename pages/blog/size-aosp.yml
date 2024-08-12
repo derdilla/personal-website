@@ -4,6 +4,7 @@ steps:
   - "Setup blog template":
     title: How many lines of code are in Android?
     content: "{{ components/blog-entry }}"
+    meta-description: "{{ description }}"
   - "Fill data":
     description: Here is how I found out that the AOSP has 2.5 million lines of code.
     time:

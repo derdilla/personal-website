@@ -28,7 +28,7 @@ pub struct SourceDir {
 
     pub pages: FsTree,
 
-    pub static_files: Vec<(PathBuf, String)>
+    pub static_files: Vec<(PathBuf, Vec<u8>)>
 }
 
 impl SourceDir {
@@ -125,7 +125,7 @@ impl SourceDir {
     }
 
     /// Recursively read all files relative to a root dir
-    fn collect_files(dir: PathBuf, prefix_dir: &PathBuf, files: &mut Vec<(PathBuf, String)>) -> io::Result<()> {
+    fn collect_files(dir: PathBuf, prefix_dir: &PathBuf, files: &mut Vec<(PathBuf, Vec<u8>)>) -> io::Result<()> {
         for entry in dir.read_dir()? {
             let entry = entry?;
             let path = entry.path();
@@ -133,7 +133,7 @@ impl SourceDir {
             if path.is_dir() {
                 Self::collect_files(path, &prefix_dir, files)?;
             } else if path.is_file() {
-                let mut file_content = fs::read_to_string(&path)?;
+                let mut file_content = fs::read(&path)?;
                 let path = path.canonicalize().unwrap();
                 let pre = prefix_dir.canonicalize().unwrap();
                 let relative_path = path.strip_prefix(pre).expect("couldn't follow paths").to_path_buf();

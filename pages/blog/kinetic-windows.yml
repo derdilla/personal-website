@@ -4,6 +4,7 @@ steps:
   - "Setup blog template":
     title: Hacking window movement
     content: "{{ components/blog-entry }}"
+    meta-description: "{{ description }}"
   - "Fill data":
     description: A short tale on the joy of microprojects.
     time:

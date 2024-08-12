@@ -50,3 +50,7 @@ main + footer {
     background-size: contain;
 }
 
+.pfp {
+    border-radius: 100%;
+}
+

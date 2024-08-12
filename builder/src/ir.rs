@@ -27,7 +27,7 @@ pub struct IR {
 
     pub pages: ParsedFsTree,
 
-    pub static_assets: Vec<(PathBuf, String)>,
+    pub static_assets: Vec<(PathBuf, Vec<u8>)>,
 }
 
 impl IR {
@@ -180,7 +180,7 @@ impl FwHTML {
                 // TODO: use proper var building (e.g. support md, ...)
                 html = html.replace(format!("{{{{ {var_name} }}}}").as_str(), var.as_str());
             } else {
-                eprintln!("Unable to resolve var: {var_name}");
+                //eprintln!("Unable to resolve var: {var_name}");
             }
         }
 
@@ -190,7 +190,7 @@ impl FwHTML {
             || new.used_components.iter().any(|e| components.contains_key(e)) {
             let tmp = variables.clone();
             //println!("{:?}", &new.used_variables.iter().filter(|e| tmp.contains_key(e.clone())));
-            println!("{:?}", new.data);
+            //println!("{:?}", new.data);
             new = new.resolved(&components, &variables);
             new = Self::new(new.data).unwrap()
         }

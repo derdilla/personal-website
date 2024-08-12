@@ -140,11 +140,16 @@ impl Value {
                 if let ParsedFsEntry::Directory(children) = dir {
                     let mut html = String::new();
                     for child in children {
-                        if let ParsedFsEntry::BuildProcedure(proc) = child.content {
+                        if let ParsedFsEntry::BuildProcedure(mut proc) = child.content {
                             if child.name == String::from("index.yml") {
                                 continue;
                             }
                             let template = data.components.get(item_template)?;
+                            let out_name = child.name.replace(".yml", ".html");
+                            proc.steps.insert(0, Step {
+                                name: Some(String::from("~~ index vars")),
+                                vars: HashMap::from([(String::from("link"), Value::Text(out_name))])
+                            });
                             let element_html = proc.execute_with_template_override(data, template.clone()).unwrap();
                             // FIXME: component not found as template -> make template string
                             html += format!("\n{}", element_html).as_str();
