@@ -43,12 +43,14 @@ fn main() {
     };
 
     println!("Reading data from '{}'...", &working_dir.to_str().unwrap());
+    // TODO: error building functions
 
     let source = SourceDir::load(working_dir);
     if let Err(err) = &source {
         match err {
             SourceDirOpenError::MissingFile(f) => eprintln!("Couldn't read file: {f}"),
             SourceDirOpenError::NoSuchDirectory(d) => eprintln!("No such directory: {d}"),
+            SourceDirOpenError::BadFsTree(fs_tree) => eprintln!("Can't load fs tree: {:?}", fs_tree)
         }
         return;
     }

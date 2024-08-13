@@ -7,7 +7,8 @@ use std::path::PathBuf;
 use lewp_css::Stylesheet;
 use scraper::Html;
 use yaml_rust2::{Yaml, YamlLoader};
-use crate::builder::Value;
+use crate::builder;
+use crate::builder::{Value, ValueGenerationError};
 
 use crate::fs_tree::{FsTree, ParsedFsTree, ParsedFsTreeParseError};
 use crate::source_dir::SourceDir;
@@ -161,41 +162,48 @@ impl FwHTML {
     }
 
     /// Inserts components and variables as long as possible.
-    pub fn resolved<F>(&self, components: &HashMap<String, FwHTML>, variables: &HashMap<&String, F>) -> Self
+    pub fn resolved<F>(&self, components: &HashMap<String, FwHTML>, variables: &HashMap<&String, F>) -> Result<Self, FwHTMLResolveError>
     where
-        F: Fn() -> Option<String>,
+        F: Fn() -> Result<String, builder::ValueGenerationError>,
     {
         // TODO: proper error propagation
         let mut html = self.data.clone();
 
         for comp_name in &self.used_components {
-            let comp = components.get(comp_name);
-            let comp = comp.expect(format!("Missing component when resolving template: {}", comp_name).as_str());
+            let comp = match components.get(comp_name) {
+                None => return Err(FwHTMLResolveError::MissingComponent(comp_name.clone())),
+                Some(comp) => comp,
+            };
             html = html.replace(format!("{{{{ components/{comp_name} }}}}").as_str(), comp.data.as_str());
         }
 
         for var_name in &self.used_variables {
             if let Some(var) = variables.get(var_name) {
-                let var = var().unwrap();
-                // TODO: use proper var building (e.g. support md, ...)
+                let var = match var() {
+                    Err(err) => return Err(FwHTMLResolveError::VariableError(var_name.clone(), Box::new(err))),
+                    Ok(var) => var,
+                };
                 html = html.replace(format!("{{{{ {var_name} }}}}").as_str(), var.as_str());
-            } else {
-                //eprintln!("Unable to resolve var: {var_name}");
             }
         }
 
-        // TODO: is this ok or should I use ::template?
-        let mut new = Self::new(html).unwrap();
+        let mut new = match Self::new(html) {
+            Err(err) => return Err(FwHTMLResolveError::GeneratesErrorInDocument(err)),
+            Ok(n) => n,
+        };
         while new.used_variables.iter().any(|e| variables.contains_key(e))
             || new.used_components.iter().any(|e| components.contains_key(e)) {
             let tmp = variables.clone();
             //println!("{:?}", &new.used_variables.iter().filter(|e| tmp.contains_key(e.clone())));
             //println!("{:?}", new.data);
-            new = new.resolved(&components, &variables);
-            new = Self::new(new.data).unwrap()
+            new = new.resolved(&components, &variables)?;
+            new = match Self::new(new.data) {
+                Err(err) => return Err(FwHTMLResolveError::GeneratesErrorInDocument(err)),
+                Ok(n) => n,
+            };
         }
 
-        new
+        Ok(new)
     }
 
     pub fn output(&self) -> String {
@@ -209,6 +217,13 @@ pub enum FwHTMLError {
     DocumentContainsErrors(Vec<Cow<'static, str>>),
     /// Doesn't start with "<!DOCTYPE html>"
     NotATemplate,
+}
+
+#[derive(Debug)]
+pub enum FwHTMLResolveError {
+    MissingComponent(String),
+    VariableError(String, Box<ValueGenerationError>),
+    GeneratesErrorInDocument(FwHTMLError),
 }
 
 mod analyzer {

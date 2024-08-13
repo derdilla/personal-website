@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::{fs, io};
 use std::path::PathBuf;
 
-use crate::fs_tree::FsTree;
+use crate::fs_tree::{FsTree, FsTreeLoadError};
 
 /// Source files loaded into memory.
 ///
@@ -39,7 +39,7 @@ impl SourceDir {
         let components = Self::read_components(&root)?;
         let layout = Self::read_layout(&root)?;
         let style = Self::read_style(&root)?;
-        let pages = FsTree::load(&root.join("pages"));
+        let pages = Self::load_fs_tree(&root)?;
         let mut static_files = Vec::new();
         if let Err(_) =  Self::collect_files(root.join("static"), &root.join("static"), &mut static_files) {
             return Err(SourceDirOpenError::NoSuchDirectory(String::from("static")));
@@ -96,6 +96,13 @@ impl SourceDir {
         )
     }
 
+    fn load_fs_tree(root: &PathBuf) -> Result<FsTree, SourceDirOpenError> {
+        match FsTree::load(&root.join("pages")) {
+            Err(err) => Err(SourceDirOpenError::BadFsTree(err)),
+            Ok(fs_tree) => Ok(fs_tree),
+        }
+    }
+
     /// Attempt to load files at the top level of [dir] into memory.
     ///
     /// The resulting name is the file name as key and the content as value.
@@ -150,5 +157,5 @@ impl SourceDir {
 pub enum SourceDirOpenError {
     MissingFile(String),
     NoSuchDirectory(String),
-
+    BadFsTree(FsTreeLoadError)
 }

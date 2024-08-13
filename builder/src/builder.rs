@@ -1,10 +1,11 @@
 use std::cmp::PartialEq;
 use std::collections::HashMap;
 use std::fmt::format;
+use chrono::{DateTime, Utc};
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use crate::fs_tree::ParsedFsEntry;
-use crate::ir::{FwHTML, IR};
+use crate::ir::{FwHTML, FwHTMLResolveError, IR};
 
 #[derive(Debug, Clone)]
 pub struct BuildProcedure {
@@ -37,11 +38,9 @@ pub enum Value {
 
 impl BuildProcedure {
     pub fn new(s: &str) -> Result<BuildProcedure, BuildProcedureLoadError> {
-        let deserialized= serde_yml::from_str(s);
-        let deserialized: loader::BuildFile = if let Err(err) = deserialized {
-            return Err(BuildProcedureLoadError::FormatError(err))
-        } else {
-            deserialized.unwrap()
+        let deserialized: loader::BuildFile = match serde_yml::from_str(s) {
+            Err(err) => return Err(BuildProcedureLoadError::FormatError(err)),
+            Ok(v) => v,
         };
 
         let mut steps = Vec::new();
@@ -88,7 +87,10 @@ impl BuildProcedure {
                 .map(|(k, v)| (k, || v.generate(&data)));
             vars.extend(&mut step_vars);
 
-            template = template.resolved(&data.components, &vars);
+            template = match template.resolved(&data.components, &vars) {
+                Err(err) => return Err(BuildProcedureBuildError::TemplateResolveError(err)),
+                Ok(t) => t,
+            };
         }
 
         Ok(template.output())
@@ -106,37 +108,43 @@ pub enum BuildProcedureBuildError {
     /// Which template was not found.
     TemplateNotFound(String),
     /// Which build step couldn't resolve which variable.
-    CantResolveVars(Option<String>, String)
+    CantResolveVars(Option<String>, String),
+    TemplateResolveError(FwHTMLResolveError),
 }
 
 impl Value {
     /// Turn the variable into a html compatible string.
     ///
     /// If the variable uses a path that isn't available resolving fails.
-    pub fn generate(&self, data: &IR) -> Option<String> {
+    pub fn generate(&self, data: &IR) -> Result<String, ValueGenerationError> {
         match self {
-            Value::Text(txt) => Some(txt.clone()),
-            Value::Int(val) => Some(val.to_string()),
+            Value::Text(txt) => Ok(txt.clone()),
+            Value::Int(val) => Ok(val.to_string()),
             Value::UnixTimestamp { value } => {
-                let timestamp = chrono::DateTime::from_timestamp(*value as i64, 0).expect("out-of-range timestamp");
+                let timestamp = match chrono::DateTime::from_timestamp(*value as i64, 0) {
+                    None => return Err(ValueGenerationError::UnixTimestampOutOfReach),
+                    Some(time) => time,
+                };
 
                 let formal = timestamp.to_rfc3339();
                 let pretty = timestamp.format("%Y-%m-%d").to_string(); // TODO:
-                Some(format!("<time datetime=\"{formal}\">{pretty}</time>").to_string())
+                Ok(format!("<time datetime=\"{formal}\">{pretty}</time>").to_string())
             },
             Value::Md { path } => {
                 if let Some(ParsedFsEntry::TextFile(md)) = data.pages.get(&format!("pages/{path}").to_string()) {
                     let parser = pulldown_cmark::Parser::new(&md);
                     let mut html = String::new();
                     pulldown_cmark::html::push_html(&mut html, parser);
-                    Some(html)
+                    Ok(html)
                 } else {
-                    eprintln!("{path}");
-                    None
+                    Err(ValueGenerationError::FileDoesntExist(path.clone()))
                 }
             }
             Value::Index { path, item_template } => {
-                let dir = data.pages.get(&format!("pages/{path}").to_string())?;
+                let dir = match data.pages.get(&format!("pages/{}", &path).to_string()) {
+                    None => return Err(ValueGenerationError::NoDirAtIndexPath(path.clone())),
+                    Some(dir) => dir,
+                };
                 if let ParsedFsEntry::Directory(children) = dir {
                     let mut html = String::new();
                     for child in children {
@@ -144,24 +152,39 @@ impl Value {
                             if child.name == String::from("index.yml") {
                                 continue;
                             }
-                            let template = data.components.get(item_template)?;
+                            let template = match data.components.get(item_template) {
+                                None => return Err(ValueGenerationError::MissingComponent(item_template.clone())),
+                                Some(t) => t,
+                            };
                             let out_name = child.name.replace(".yml", ".html");
                             proc.steps.insert(0, Step {
                                 name: Some(String::from("~~ index vars")),
                                 vars: HashMap::from([(String::from("link"), Value::Text(out_name))])
                             });
-                            let element_html = proc.execute_with_template_override(data, template.clone()).unwrap();
+                            let element_html = match proc.execute_with_template_override(data, template.clone()) {
+                                Ok(html) => html,
+                                Err(err) => return Err(ValueGenerationError::CantBuildIndexItem(child.name.clone(), err)),
+                            };
                             // FIXME: component not found as template -> make template string
                             html += format!("\n{}", element_html).as_str();
                         }
                     }
-                    Some(html)
+                    Ok(html)
                 } else {
-                    None
+                    Err(ValueGenerationError::NoDirAtIndexPath(path.clone()))
                 }
             }
         }
     }
+}
+
+#[derive(Debug)]
+pub enum ValueGenerationError {
+    FileDoesntExist(String),
+    UnixTimestampOutOfReach,
+    NoDirAtIndexPath(String),
+    CantBuildIndexItem(String, BuildProcedureBuildError),
+    MissingComponent(String),
 }
 
 mod loader {

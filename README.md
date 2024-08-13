@@ -103,7 +103,13 @@ and *assemble*d to the `/index.html` and `/blog/index.html` paths respectively
 
 # TODO:
 
-- define top level config file
-- meta descriptions
-- navbar
+### Before release:
+
 - sort blog posts in index
+- sitemap
+- validate for unresolved vars
+
+### After:
+
+- https://developers.google.com/search/docs/appearance/structured-data
+- rss feed

@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, io};
 use std::path::PathBuf;
 
 use either::Either;
@@ -14,29 +14,46 @@ pub struct FsTree {
 }
 
 impl FsTree {
-    pub fn load(path: &PathBuf) -> Self {
-        // TODO: don't panic on error
+    pub fn load(path: &PathBuf) -> Result<Self, FsTreeLoadError> {
         if path.is_file() {
-            let content = fs::read_to_string(&path)
-                .expect(format!("Couldn't read {}", &path.to_str().unwrap()).as_str());
-            FsTree {
-                entry_name: path.file_name().unwrap().to_str().unwrap().to_string(),
-                child: Either::Left(content),
+            let content = match fs::read_to_string(&path) {
+                Err(err) => return Err(FsTreeLoadError::CantReadPath(path.clone(), err)),
+                Ok(content) => content,
+            };
+            if let Some(Some(file_name)) = path.file_name().map(|f| f.to_str()) {
+                Ok(FsTree {
+                    entry_name: file_name.to_string(),
+                    child: Either::Left(content),
+                })
+            } else {
+                Err(FsTreeLoadError::UnparsableFilename(path.clone()))
             }
+
         } else if path.is_dir() {
-            let read_dir = fs::read_dir(&path)
-                .expect(format!("Couldn't read {}", &path.to_str().unwrap()).as_str());
+            let read_dir = match fs::read_dir(&path) {
+                Err(err) => return Err(FsTreeLoadError::CantReadPath(path.clone(), err)),
+                Ok(c) => c
+            };
             let mut children = Vec::new();
             for e in read_dir {
-                let e = e.expect(format!("Couldn't read {}", &path.to_str().unwrap()).as_str());
-                children.push(FsTree::load(&e.path()));
+                match e {
+                    Err(err) => return Err(FsTreeLoadError::CantReadPath(path.clone(), err)),
+                    Ok(e) => {
+                        let subtree = FsTree::load(&e.path())?;
+                        children.push(subtree);
+                    }
+                }
             }
-            FsTree {
-                entry_name: path.file_name().unwrap().to_str().unwrap().to_string(),
-                child: Either::Right(children),
+            if let Some(Some(file_name)) = path.file_name().map(|f| f.to_str()) {
+                Ok(FsTree {
+                    entry_name: file_name.to_string(),
+                    child: Either::Right(children),
+                })
+            } else {
+                Err(FsTreeLoadError::UnparsableFilename(path.clone()))
             }
         } else {
-            panic!("Can't handle symlink at {}", &path.to_str().unwrap())
+            Err(FsTreeLoadError::IsSymlink(path.clone()))
         }
     }
 
@@ -73,6 +90,13 @@ impl FsTree {
     }
 
     // TODO: add pub util getters.
+}
+
+#[derive(Debug)]
+pub enum FsTreeLoadError {
+    CantReadPath(PathBuf, io::Error),
+    UnparsableFilename(PathBuf),
+    IsSymlink(PathBuf),
 }
 
 #[derive(Debug, Clone)]
