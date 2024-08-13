@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-yaml-rust2 = "0.8.1"
 log = "0.4.22"
 either = "1.13.0"
 scraper = "0.20.0"

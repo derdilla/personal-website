@@ -75,6 +75,10 @@ At the end of steps there must be no unresolved variables.
 | Md            | Text in markdown format.                                                                                                                                                                                                                                                                             |
 | index         | Requires a directory in the `path` argument. Performs the specified `steps` in every .yml file (except index.yml) in the specified directory on any *component* specified in a custom `itemTemplate` key. Additionally provides a `link` variable that links to the article generated for that item. |
 
+### Files
+
+- `page-modifications`: Automatically generated: required in CWD to build the sitemap.
+
 ## CSS
 
 In general CSS is considered as introducing too much complexity and should be 
@@ -101,12 +105,12 @@ URL path.
 The `home.html` and `blog.html` components get inserted in a base-page template
 and *assemble*d to the `/index.html` and `/blog/index.html` paths respectively
 
+
 # TODO:
 
 ### Before release:
 
 - sort blog posts in index
-- sitemap
 - validate for unresolved vars
 
 ### After:

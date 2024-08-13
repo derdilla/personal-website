@@ -1,22 +1,20 @@
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::fmt::Debug;
-use std::{fs, io};
 use std::path::PathBuf;
 
 use lewp_css::Stylesheet;
 use scraper::Html;
-use yaml_rust2::{Yaml, YamlLoader};
-use crate::builder;
-use crate::builder::{Value, ValueGenerationError};
+use serde::Deserialize;
 
+use crate::builder;
+use crate::builder::ValueGenerationError;
 use crate::fs_tree::{FsTree, ParsedFsTree, ParsedFsTreeParseError};
 use crate::source_dir::SourceDir;
 
 /// Intermediate representation of the [SourceDir].
 pub struct IR {
-    /// Config from website.yml.
-    pub config: Yaml,
+    pub config: WebsiteConf,
 
     pub templates: HashMap<String, FwHTML>,
 
@@ -50,17 +48,9 @@ impl IR {
         })
     }
 
-    fn load_config(data: &str) -> Result<Yaml, SourceFormatError> {
-        match YamlLoader::load_from_str(data) {
-            Ok(yaml) => {
-                if let Some(yaml) = yaml.first() {
-                    Ok(yaml.clone())
-                } else {
-                    Err(SourceFormatError::BadWebsiteYaml)
-                }
-            }
-            Err(_) => Err(SourceFormatError::InvalidYaml(String::from("website.yml")))
-        }
+    fn load_config(data: &str) -> Result<WebsiteConf, SourceFormatError> {
+        serde_yml::from_str(data)
+            .map_err(|err| SourceFormatError::InvalidYaml(String::from("website.yml"), err))
     }
 
     fn load_templates(data: HashMap<String, String>) -> Result<HashMap<String, FwHTML>, SourceFormatError> {
@@ -107,9 +97,16 @@ impl IR {
     }
 }
 
+#[derive(Debug, Deserialize)]
+pub struct WebsiteConf {
+    pub url: String,
+}
+
 #[derive(Debug)]
 pub enum SourceFormatError {
-    InvalidYaml(String),
+    /// Name of the file that has invalid yaml
+    InvalidYaml(String, serde_yml::modules::error::Error),
+    /// File name, err
     InvalidTemplateHTML(String, FwHTMLError),
     /// website data is not in expected format.
     BadWebsiteYaml,

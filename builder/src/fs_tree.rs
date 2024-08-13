@@ -2,7 +2,7 @@ use std::{fs, io};
 use std::path::PathBuf;
 
 use either::Either;
-use yaml_rust2::{Yaml, YamlLoader};
+
 use crate::builder::{BuildProcedure, BuildProcedureLoadError};
 
 #[derive(Debug)]

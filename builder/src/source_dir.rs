@@ -33,7 +33,7 @@ pub struct SourceDir {
 
 impl SourceDir {
 
-    pub fn load(root: PathBuf) -> Result<Self, SourceDirOpenError> {
+    pub fn load(root: PathBuf) -> Result<Self, SourceLoadError> {
         let website_yml = Self::read_website(&root)?;
         let templates = Self::read_templates(&root)?;
         let components = Self::read_components(&root)?;
@@ -42,7 +42,7 @@ impl SourceDir {
         let pages = Self::load_fs_tree(&root)?;
         let mut static_files = Vec::new();
         if let Err(_) =  Self::collect_files(root.join("static"), &root.join("static"), &mut static_files) {
-            return Err(SourceDirOpenError::NoSuchDirectory(String::from("static")));
+            return Err(SourceLoadError::NoSuchDirectory(String::from("static")));
         }
 
         Ok(SourceDir {
@@ -56,33 +56,33 @@ impl SourceDir {
         })
     }
 
-    fn read_website(root: &PathBuf) -> Result<String, SourceDirOpenError> {
+    fn read_website(root: &PathBuf) -> Result<String, SourceLoadError> {
         match fs::read_to_string(root.join("website.yml")) {
-            Err(_) => return Err(SourceDirOpenError::MissingFile(String::from("website.yml"))),
+            Err(_) => return Err(SourceLoadError::MissingFile(String::from("website.yml"))),
             Ok(txt) => Ok(txt),
         }
     }
 
-    fn read_layout(root: &PathBuf) -> Result<String, SourceDirOpenError> {
+    fn read_layout(root: &PathBuf) -> Result<String, SourceLoadError> {
         match fs::read_to_string(root.join("layout.css")) {
-            Err(_) => return Err(SourceDirOpenError::MissingFile(String::from("layout.css"))),
+            Err(_) => return Err(SourceLoadError::MissingFile(String::from("layout.css"))),
             Ok(txt) => Ok(txt),
         }
     }
 
-    fn read_style(root: &PathBuf) -> Result<String, SourceDirOpenError> {
+    fn read_style(root: &PathBuf) -> Result<String, SourceLoadError> {
         match fs::read_to_string(root.join("style.css")) {
-            Err(_) => return Err(SourceDirOpenError::MissingFile(String::from("style.css"))),
+            Err(_) => return Err(SourceLoadError::MissingFile(String::from("style.css"))),
             Ok(txt) => Ok(txt),
         }
     }
 
-    fn read_templates(root: &PathBuf) -> Result<HashMap<String, String>, SourceDirOpenError> {
+    fn read_templates(root: &PathBuf) -> Result<HashMap<String, String>, SourceLoadError> {
         let templates = root.join("templates");
         Self::read_dir(&templates)
     }
 
-    fn read_components(root: &PathBuf) -> Result<HashMap<String, String>, SourceDirOpenError> {
+    fn read_components(root: &PathBuf) -> Result<HashMap<String, String>, SourceLoadError> {
         let components = root.join("components");
         let components = Self::read_dir(&components);
         components.and_then(|components| Ok(components.iter()
@@ -96,9 +96,9 @@ impl SourceDir {
         )
     }
 
-    fn load_fs_tree(root: &PathBuf) -> Result<FsTree, SourceDirOpenError> {
+    fn load_fs_tree(root: &PathBuf) -> Result<FsTree, SourceLoadError> {
         match FsTree::load(&root.join("pages")) {
-            Err(err) => Err(SourceDirOpenError::BadFsTree(err)),
+            Err(err) => Err(SourceLoadError::BadFsTree(err)),
             Ok(fs_tree) => Ok(fs_tree),
         }
     }
@@ -106,10 +106,10 @@ impl SourceDir {
     /// Attempt to load files at the top level of [dir] into memory.
     ///
     /// The resulting name is the file name as key and the content as value.
-    fn read_dir(dir: &PathBuf) -> Result<HashMap<String, String>, SourceDirOpenError> {
+    fn read_dir(dir: &PathBuf) -> Result<HashMap<String, String>, SourceLoadError> {
         let files = match dir.read_dir() {
             Ok(d) => d,
-            Err(_) => return Err(SourceDirOpenError::NoSuchDirectory(dir.to_str().unwrap().to_string())),
+            Err(_) => return Err(SourceLoadError::NoSuchDirectory(dir.to_str().unwrap().to_string())),
         };
         let mut loaded_files = HashMap::new();
         for t in files {
@@ -122,10 +122,10 @@ impl SourceDir {
                     let file_name = e.file_name().to_str().unwrap().to_string();
                     loaded_files.insert(file_name, content);
                 } else {
-                    return Err(SourceDirOpenError::MissingFile(path.to_str().unwrap().to_string()));
+                    return Err(SourceLoadError::MissingFile(path.to_str().unwrap().to_string()));
                 }
             } else {
-                return Err(SourceDirOpenError::NoSuchDirectory(dir.to_str().unwrap().to_string()));
+                return Err(SourceLoadError::NoSuchDirectory(dir.to_str().unwrap().to_string()));
             }
         };
         Ok(loaded_files)
@@ -140,7 +140,7 @@ impl SourceDir {
             if path.is_dir() {
                 Self::collect_files(path, &prefix_dir, files)?;
             } else if path.is_file() {
-                let mut file_content = fs::read(&path)?;
+                let file_content = fs::read(&path)?;
                 let path = path.canonicalize().unwrap();
                 let pre = prefix_dir.canonicalize().unwrap();
                 let relative_path = path.strip_prefix(pre).expect("couldn't follow paths").to_path_buf();
@@ -154,7 +154,7 @@ impl SourceDir {
 }
 
 #[derive(Debug)]
-pub enum SourceDirOpenError {
+pub enum SourceLoadError {
     MissingFile(String),
     NoSuchDirectory(String),
     BadFsTree(FsTreeLoadError)

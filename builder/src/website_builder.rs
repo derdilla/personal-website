@@ -1,9 +1,11 @@
-use std::{fs, io};
-use std::io::{Read, Write};
+use std::fs;
+use std::io::Write;
 use std::path::PathBuf;
-use crate::builder::{BuildProcedureBuildError};
+
+use crate::builder::BuildProcedureBuildError;
 use crate::fs_tree::ParsedFsEntry;
-use crate::ir::{IR};
+use crate::ir::IR;
+use crate::sitemapper::SiteMapBuilder;
 
 pub struct Website {
     pages: Vec<(PathBuf, Vec<u8>)>,
@@ -22,6 +24,7 @@ impl Website {
         let build_scripts = source.pages.filter("yml");
         let total = build_scripts.len();
         let mut page_count = 0;
+        let mut sitemap = SiteMapBuilder::new((&source.config.url).clone());
         for (mut path, build_script) in build_scripts {
             if let ParsedFsEntry::BuildProcedure(build_script) = build_script {
                 path.set_extension("html");
@@ -30,9 +33,14 @@ impl Website {
                 println!("> {} ({} / {})", &path.to_str().unwrap(), &page_count, &total);
                 let html = build_script.execute(&source)?;
 
-                build_pages.push((path, html.as_bytes().to_vec()));
+                let html = html.as_bytes().to_vec();
+                sitemap.add(path.to_str().unwrap().to_string(), &html);
+                build_pages.push((path, html));
             }
         }
+
+        println!("Building sitemap:");
+        build_pages.push((PathBuf::from("sitemap.xml"), sitemap.build().as_bytes().to_vec()));
 
         Ok(Website { pages: build_pages })
     }

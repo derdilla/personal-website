@@ -1,9 +1,6 @@
 use std::cmp::PartialEq;
 use std::collections::HashMap;
-use std::fmt::format;
-use chrono::{DateTime, Utc};
-use itertools::Itertools;
-use serde::{Deserialize, Serialize};
+
 use crate::fs_tree::ParsedFsEntry;
 use crate::ir::{FwHTML, FwHTMLResolveError, IR};
 
@@ -127,7 +124,7 @@ impl Value {
                 };
 
                 let formal = timestamp.to_rfc3339();
-                let pretty = timestamp.format("%Y-%m-%d").to_string(); // TODO:
+                let pretty = timestamp.format("%Y-%m-%d").to_string();
                 Ok(format!("<time datetime=\"{formal}\">{pretty}</time>").to_string())
             },
             Value::Md { path } => {
@@ -189,6 +186,7 @@ pub enum ValueGenerationError {
 
 mod loader {
     use std::collections::HashMap;
+
     use serde::Deserialize;
 
     #[derive(Deserialize, Debug)]
@@ -230,7 +228,6 @@ mod loader {
 
 
     mod tests {
-        use super::BuildFile;
 
         #[test]
         fn typed() {
@@ -274,9 +271,6 @@ mod loader {
 }
 
 mod tests {
-    use std::collections::HashMap;
-    use crate::builder::{BuildProcedure, Value};
-
     #[test]
     fn decodes_sample_blog_template() {
         let procedure = BuildProcedure::new(r#"template: base-page.html
