@@ -1,7 +1,7 @@
 I recently wanted to make my desktop windows keep their inertia and slide a bit further after letting go of them (a bit like kinetic scrolling). "Kinetic window dragging" so to say. For projects like these there is no particular reason. One might even say this decreases usability. It's just a fun thing to do that you will forget about in a few weeks and wouldn't provide any value to anyone else.
 
 <video style="width:100%" controls mute>
-  <source src="/media/kinetik-windows-1.webm" type="video/webm" />
+  <source src="/assets/kinetik-windows-1.webm" type="video/webm" />
 </video>
 
 So let me take this as an example for explaining my approach on small, hacky projects and the joy that comes with them.
