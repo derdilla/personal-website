@@ -108,11 +108,9 @@ and *assemble*d to the `/index.html` and `/blog/index.html` paths respectively
 
 # TODO:
 
-### Before release:
-
-- validate for unresolved vars
-
 ### After:
 
 - https://developers.google.com/search/docs/appearance/structured-data
 - rss feed
+- pack
+- compile

@@ -56,18 +56,19 @@ fn main() {
         Ok(ir) => ir,
     };
     let website = Website::build(&source).unwrap();
-    if PathBuf::from("out").exists() {
-        fs::remove_dir_all("out").unwrap();
+    if !website.validate() {
+        return;
     }
-    website.write(&PathBuf::from("out"));
-
     // TODO:
     // Fail on:
-    // - Variables without value
     // - Missing css classes or tags
     // Warn on:
     // - Unused files
     // - Missing index.html
+    if PathBuf::from("out").exists() {
+        fs::remove_dir_all("out").unwrap();
+    }
+    website.write(&PathBuf::from("out"));
 }
 
 enum Command {

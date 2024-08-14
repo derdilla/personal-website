@@ -1,6 +1,8 @@
 use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
+use lewp_css::domain::at_rules::font_face::FontDisplay::fallback;
+use regex::Regex;
 
 use crate::builder::BuildProcedureBuildError;
 use crate::fs_tree::ParsedFsEntry;
@@ -45,6 +47,27 @@ impl Website {
         Ok(Website { pages: build_pages })
     }
 
+    /// Validates generated files for unresolved variables and components.
+    ///
+    /// When errors are found they get printed and false gets returned.
+    pub fn validate(&self) -> bool {
+        println!("validating...");
+        const RED: &'static str = "\x1b[31m";
+        const CLEAR: &'static str = "\x1b[0m";
+
+        let mut valid = true;
+        let regex = Regex::new(r"\{\{ [^\s]* }}").unwrap();
+        for (path, content) in self.pages.clone() {
+            if path.extension().is_some_and(|e| e.to_str().unwrap() == "html") {
+                if regex.is_match(&String::from_utf8(content).unwrap()) {
+                    eprintln!("{RED}ERROR{CLEAR}: Unresolved variable in generated file {}", path.display());
+                    valid = false;
+                }
+            }
+        }
+        valid
+    }
+
     pub fn write(&self, out: &PathBuf) -> bool {
         if out.is_file() {
             panic!("Can't write to file")
@@ -72,5 +95,17 @@ impl Website {
         let mut file = fs::File::create(path)?;
         file.write_all(content)?;
         Ok(())
+    }
+}
+
+mod test {
+    use regex::Regex;
+
+    #[test]
+    fn validation_regex_works() {
+        let regex = Regex::new(r"\{\{ [^\s]* }}").unwrap();
+        assert!(regex.is_match("{{ test }}"));
+        assert!(regex.is_match("{{ test/csom }}"));
+        assert!(!regex.is_match("{{ test }"));
     }
 }
