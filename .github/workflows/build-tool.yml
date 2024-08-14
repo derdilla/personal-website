@@ -1,0 +1,30 @@
+name: Build the builder
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - '**.rs'
+      - 'builder/**.toml'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - '**.rs'
+      - 'builder/**.toml'
+  
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with: 
+        sparse-checkout: |
+          builder
+    - run: cd builder && cargo build --release --verbose
+    - uses: actions/upload-artifact@v4
+      with:
+        name: builder-bin
+        path: builder/target/release/builder
