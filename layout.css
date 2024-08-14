@@ -1,0 +1,86 @@
+body {
+    margin: 0;
+}
+
+main {
+    /*
+        Center the main content of the page.
+
+        Explanation:
+        - outer max(3vw, ...)           causes a minimum padding of 3vw on both sides
+        - calc((...) / 2                makes same padding formula applicable to both sides
+        - (100% - min(...)) / 2         calculates padding from width of content
+        - min(max(100ch, 30vw), 100%)   describes the width of the document:
+                                            > on small screens the whole with is taken
+                                            > on normal screens a paragraph is 100 characters wide
+                                            > on large screens the page is at least 30vw wide in order
+                                              to not "waste" too much screen space
+     */
+    padding-left: max(3vw, calc((100% - min(max(100ch, 30vw), 100%)) / 2));
+    padding-right: max(3vw, calc((100% - min(max(100ch, 30vw), 100%)) / 2));
+}
+
+:is(h1, h2, h3) {
+    text-rendering: optimizelegibility;
+}
+
+p {
+    overflow-wrap: break-word;
+    text-rendering: optimizeSpeed;
+}
+
+main + footer {
+    width: 100vw;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+footer > address {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+footer > address > * {
+    padding: 10px;
+
+}
+
+footer > p {
+    padding: 1em;
+}
+
+/* headlines with publishing date */
+header > :is(h1, h2):has(+ time) {
+    margin-bottom: -0.2em;
+}
+/* dates after headlines */
+header > :is(h1, h2) + time {
+    margin-left: 0.2em;
+    font-size: small;
+}
+
+aside {
+    float: right;
+    margin-right: 1ch;
+}
+
+.layout-link-button {
+    padding: 4px 4px 4px 1em;
+    width: 90%;
+    display: block;
+    /* TODO */
+}
+
+.blog > article {
+    margin-bottom: 2em;
+    border-left-width: 3px;
+    border-left-style: solid;
+    padding-left: 4px;
+}
+
+.blog p {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+}

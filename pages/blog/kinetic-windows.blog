@@ -1,0 +1,31 @@
+I recently wanted to make my desktop windows keep their inertia and slide a bit further after letting go of them (a bit like kinetic scrolling). "Kinetic window dragging" so to say. For projects like these there is no particular reason. One might even say this decreases usability. It's just a fun thing to do that you will forget about in a few weeks and wouldn't provide any value to anyone else.
+
+<video style="width:100%" controls mute>
+  <source src="/assets/kinetik-windows-1.webm" type="video/webm" />
+</video>
+
+So let me take this as an example for explaining my approach on small, hacky projects and the joy that comes with them.
+
+ A few google searches about the topic didn't find any meaningful results so I decided this was one of those hacky projects and I needed to find a approach for implementing it. For hacky projects I usually try the first and simplest things I can find, so instead of trying to find the apis my compositor provides (at the time of writing that's [Hyprland](https://hyprland.org)) or trying to learn window rules and creating hyprctl scripts, I took the nuclear approach.
+
+Hyprland is an open source wayland compositor written in c++ and based on wlroots. While my c++ skills are mediocre at best, the small code base allowed me to find a place to hook into window dragging rel fast using some plain text searches in the src directory. I find code searching and following definitions to be two good strategies for navigating unknown repositories when wanting to quickly add a feature or fix a bug.
+
+Before I started implementing I verified that I knew could build and run the code. This would have been a major roadblock for this approach and prompt me to search for alternative solutions as resoling build problem can take a <b>really</b> long time when you don't know the tools at hand.
+
+At the time of writing Hyprland handles window dragging in `IHyprLayout.cpp` by somehow storing which window is currently dragged and from where in `IHyprLayout::onBeginDragWindow` and `IHyprLayout::onEndDragWindow`. The window position of the dragged window is directly updated on mouse movement in `IHyprLayout::onMouseMove`, so there was no direct place where I could set some velocity.
+
+Because this was a short term project I allowed myself to ignore all existing variables and just created my own globals and functions directly where I use them.
+```cpp
+double last_speed_x = 0;
+double last_speed_y = 0;
+CWindow *upd_window = nullptr;
+```
+The speed was updated on mouse movement using the `TICKDELTA` variables that were already there. Not sure what they do exactly, but they looked correct enough for me to just try them. My real code starts at the end of the `onEndDragWindow` function. I didn't bother to search for some central callback/ticking place in the compositor and just started a new thread with my function that <i>surely</i> won't cause race conditions and crash my desktop.
+
+Luckily the hyprland devs have a nice coding style, so that the window pointer I stole is still valid when I use it. The position update function adds the stored velocity to the window position and gradually moves the speed towards zero using arbitrary constants I experimented around with. To make this process visible, I put another arbitrary sleep in there I googled together (again, I'm terrible at c++). The window moving code was a straight copy from the mouse movement function.
+
+To my own utter surprise the code immediately compiled and didn't crash on startup. It started crashing when let go of a window due to some quirks of c++ threads for which chatgpt told me to detach the thread which magically worked. Some other bugs I resolved through try and error made the velocity not work in all directions. I also tweaked my constants to update the position more often and to slow down more gradually.
+
+After about 7-10 minutes I had a solution I was relatively happy with. Sure, there are some bugs that would make it useless for others, for example windows going of the screen or problems with dragging tiling windows. But because I hacked this project for myself this is perfectly fine. When I end up annoyed by them I can fix them in a few minutes.
+
+This is usually the point where others tell you why this coding philosophy is horrible and appeal to you to never ever do this, but let me do the contrary. There is so much magic in modern software, and software stacks have grown so complex that most things need weeks to read into, that this stile of small changes for very few people is often the most efficient. We still need high quality, large general purpose projects that pay attention to security and are maintainable. But in my own personal opinion, there should be no shame in making things your own way.

@@ -1,0 +1,13 @@
+template: base-page.html
+
+steps:
+  - "Create blog overview":
+    title: "About: derdilla"
+    meta-description: "Self description of programmer 'derdilla'"
+    content: "{{ components/about }}"
+    about:
+      type: md
+      path: about.md
+    index:
+      type: md
+      path: overview.md
