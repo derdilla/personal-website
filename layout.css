@@ -20,7 +20,7 @@ main {
     padding-right: max(3vw, calc((100% - min(max(100ch, 30vw), 100%)) / 2));
 }
 
-:is(h1, h2, h3) {
+h1, h2, h3 {
     text-rendering: optimizelegibility;
 }
 
