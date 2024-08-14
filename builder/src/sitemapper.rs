@@ -1,7 +1,5 @@
 use std::fs;
-use std::fs::File;
 use std::hash::{DefaultHasher, Hash, Hasher};
-use std::io::Write;
 use std::time::{SystemTime, UNIX_EPOCH};
 use chrono::{DateTime, Utc};
 use itertools::Itertools;

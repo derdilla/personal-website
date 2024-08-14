@@ -1,5 +1,6 @@
 use std::cmp::PartialEq;
 use std::collections::HashMap;
+use itertools::Itertools;
 
 use crate::fs_tree::ParsedFsEntry;
 use crate::ir::{FwHTML, FwHTMLResolveError, IR};
@@ -144,10 +145,17 @@ impl Value {
                 };
                 if let ParsedFsEntry::Directory(children) = dir {
                     let mut html = String::new();
+                    // Sorted in reverse order
+                    let children = children.iter()
+                        .sorted_by(|a, b| b.created.unwrap_or(0).cmp(&a.created.unwrap_or(0)));
                     for child in children {
+                        let child = child.clone();
                         if let ParsedFsEntry::BuildProcedure(mut proc) = child.content {
                             if child.name == String::from("index.yml") {
                                 continue;
+                            }
+                            if child.created.is_none() {
+                                return Err(ValueGenerationError::IndexGitTimestampMissing(child.name))
                             }
                             let template = match data.components.get(item_template) {
                                 None => return Err(ValueGenerationError::MissingComponent(item_template.clone())),
@@ -182,6 +190,7 @@ pub enum ValueGenerationError {
     NoDirAtIndexPath(String),
     CantBuildIndexItem(String, BuildProcedureBuildError),
     MissingComponent(String),
+    IndexGitTimestampMissing(String)
 }
 
 mod loader {
@@ -228,6 +237,7 @@ mod loader {
 
 
     mod tests {
+        use crate::builder::loader::BuildFile;
 
         #[test]
         fn typed() {
@@ -271,6 +281,9 @@ mod loader {
 }
 
 mod tests {
+    use std::collections::HashMap;
+    use crate::builder::{BuildProcedure, Value};
+
     #[test]
     fn decodes_sample_blog_template() {
         let procedure = BuildProcedure::new(r#"template: base-page.html

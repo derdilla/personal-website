@@ -11,6 +11,7 @@ pub struct FsTree {
     /// If this is a file: this is the content if this is a dir these are the
     /// children.
     child: Either<String, Vec<FsTree>>,
+    created: Option<u64>
 }
 
 impl FsTree {
@@ -21,9 +22,11 @@ impl FsTree {
                 Ok(content) => content,
             };
             if let Some(Some(file_name)) = path.file_name().map(|f| f.to_str()) {
+                let created = Self::get_added_to_git_date(path.canonicalize().unwrap_or_else(|_| path.clone()));
                 Ok(FsTree {
                     entry_name: file_name.to_string(),
                     child: Either::Left(content),
+                    created,
                 })
             } else {
                 Err(FsTreeLoadError::UnparsableFilename(path.clone()))
@@ -48,6 +51,7 @@ impl FsTree {
                 Ok(FsTree {
                     entry_name: file_name.to_string(),
                     child: Either::Right(children),
+                    created: None,
                 })
             } else {
                 Err(FsTreeLoadError::UnparsableFilename(path.clone()))
@@ -55,6 +59,20 @@ impl FsTree {
         } else {
             Err(FsTreeLoadError::IsSymlink(path.clone()))
         }
+    }
+
+    fn get_added_to_git_date(path: PathBuf) -> Option<u64> {
+        let out = std::process::Command::new("git")
+            .arg("log")
+            .arg("--pretty=format:%at") // https://git-scm.com/docs/pretty-formats#Documentation/pretty-formats.txt-ematem
+            .arg(path)
+            .output().ok()?;
+        if !out.status.success() {
+            return None;
+        }
+        let out = String::from_utf8(out.stdout).ok()?;
+        let out = out.split("\n").last()?;
+        out.parse().ok()
     }
 
     pub fn parse(self) -> Result<ParsedFsTree, ParsedFsTreeParseError> {
@@ -73,6 +91,7 @@ impl FsTree {
                 Ok(ParsedFsTree {
                     name: self.entry_name,
                     content,
+                    created: self.created,
                 })
             }
             Either::Right(children) => {
@@ -84,6 +103,7 @@ impl FsTree {
                 Ok(ParsedFsTree {
                     name: self.entry_name,
                     content: ParsedFsEntry::Directory(parsed),
+                    created: self.created,
                 })
             }
         }
@@ -103,6 +123,7 @@ pub enum FsTreeLoadError {
 pub struct ParsedFsTree {
     pub name: String,
     pub content: ParsedFsEntry,
+    pub created: Option<u64>
 }
 
 #[derive(Debug, Clone)]

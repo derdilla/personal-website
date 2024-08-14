@@ -110,7 +110,6 @@ and *assemble*d to the `/index.html` and `/blog/index.html` paths respectively
 
 ### Before release:
 
-- sort blog posts in index
 - validate for unresolved vars
 
 ### After:

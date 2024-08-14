@@ -1,1 +1,5 @@
 /target
+
+# get created during dev
+/out/
+/page-modifications
