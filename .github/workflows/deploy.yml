@@ -28,7 +28,7 @@ jobs:
       - run: rm -rf builder
       - uses: actions/download-artifact@v4
         with:
-          name: builder-bin
+          name: builder
       - run: chmod +x builder-bin
       - run: ./builder-bin assemble
       - name: Setup Pages
