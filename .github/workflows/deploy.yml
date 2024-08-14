@@ -26,11 +26,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: rm -rf builder
-      - uses: actions/download-artifact@v4
+      - name: Cache builder build
+        id: cache-builder
+        uses: actions/cache@v4
         with:
-          name: builder
-      - run: chmod +x builder-bin
-      - run: ./builder-bin assemble
+          path: |
+            builder/target/release/builder
+          key: builder-${{ hashFiles('builder/Cargo.toml', 'builder/Cargo.lock', 'builder/**/*.rs') }}
+      - name: Build builder
+        if: steps.cache-primes.outputs.cache-hit != 'true'
+        run: cd builder && cargo build --release && cd ..
+      - run: builder/target/release/builder assemble
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
