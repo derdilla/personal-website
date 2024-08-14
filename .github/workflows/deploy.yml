@@ -33,7 +33,7 @@ jobs:
             builder/target/release/builder
           key: builder-${{ hashFiles('builder/Cargo.toml', 'builder/Cargo.lock', 'builder/**/*.rs') }}
       - name: Build builder
-        if: steps.cache-primes.outputs.cache-hit != 'true'
+        if: steps.cache-builder.outputs.cache-hit != 'true'
         run: cd builder && cargo build --release && cd ..
       - run: builder/target/release/builder assemble
       - name: Setup Pages
