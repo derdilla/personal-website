@@ -27,6 +27,9 @@ pub enum Value {
     Md {
         path: String,
     },
+    TextFile {
+        path: String,
+    },
     Index {
         path: String,
         /// Name of a *component*.
@@ -54,6 +57,7 @@ impl BuildProcedure {
                     loader::Value::Tagged { inner } => match inner {
                         loader::ValueTyped::UnixTimestamp { value } => Value::UnixTimestamp{ value },
                         loader::ValueTyped::Md { path } => Value::Md{ path },
+                        loader::ValueTyped::Text { path } => Value::TextFile{ path },
                         loader::ValueTyped::Index { path, item_template } => Value::Index{ path, item_template },
                     }
                     loader::Value::Text(txt) => Value::Text(txt),
@@ -134,6 +138,13 @@ impl Value {
                     let mut html = String::new();
                     pulldown_cmark::html::push_html(&mut html, parser);
                     Ok(html)
+                } else {
+                    Err(ValueGenerationError::FileDoesntExist(path.clone()))
+                }
+            }
+            Value::TextFile { path } => {
+                if let Some(ParsedFsEntry::TextFile(txt)) = data.pages.get(&format!("pages/{path}").to_string()) {
+                    Ok(txt)
                 } else {
                     Err(ValueGenerationError::FileDoesntExist(path.clone()))
                 }
@@ -225,6 +236,10 @@ mod loader {
             value: u64,
         },
         Md {
+            // TODO: add value field and use options when needed.
+            path: String,
+        },
+        Text {
             // TODO: add value field and use options when needed.
             path: String,
         },
