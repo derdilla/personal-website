@@ -1,0 +1,19 @@
+template: base-page.html
+
+steps:
+  - "Setup blog template":
+    title: How many lines of code are in Android 14?
+    content: "{{ components/blog-entry }}"
+    meta-description: "{{ description }}"
+  - "Fill data":
+    description: Here is how I found out that the AOSP has in fact nearly 200 million lines of code and comments.
+    time:
+      type: unixTimestamp
+      value: 1724441478
+    text:
+      type: md
+      path: blog/size-aosp14.md
+    aosp-data:
+      type: text
+      path: blog/size-aosp14-data.html
+
