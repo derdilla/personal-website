@@ -1,6 +1,7 @@
 use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
+use itertools::Itertools;
 use lewp_css::domain::at_rules::font_face::FontDisplay::fallback;
 use regex::Regex;
 
@@ -10,7 +11,7 @@ use crate::ir::IR;
 use crate::sitemapper::SiteMapBuilder;
 
 pub struct Website {
-    pages: Vec<(PathBuf, Vec<u8>)>,
+    pub pages: Vec<(PathBuf, Vec<u8>)>,
 }
 
 impl Website {
@@ -40,6 +41,23 @@ impl Website {
                 build_pages.push((path, html));
             }
         }
+
+        println!("Creating aliases:");
+        let mut aliases = Vec::new();
+        for (path, content) in &build_pages {
+            let path = path.to_str().unwrap();
+            if path.ends_with(".html") && !path.ends_with("index.html") {
+                let name = path.split('/').last().unwrap().strip_suffix(".html").unwrap();
+                println!("> {}", &path);
+                
+                let idx_path = path.replace(format!("{name}.html").as_str(), format!("{name}/index.html").as_str());
+                println!("  - {}", &idx_path);
+                aliases.push((PathBuf::from(idx_path), content.clone()));
+            }
+        }
+        println!("> {} aliases created", &aliases.len());
+
+        build_pages.append(&mut aliases);
 
         println!("Building sitemap:");
         build_pages.push((PathBuf::from("sitemap.xml"), sitemap.build().as_bytes().to_vec()));
@@ -92,6 +110,7 @@ impl Website {
             fs::create_dir_all(parent)?;
         }
 
+        println!("writing {:?}", &path);
         let mut file = fs::File::create(path)?;
         file.write_all(content)?;
         Ok(())
