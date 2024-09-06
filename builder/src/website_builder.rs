@@ -3,7 +3,7 @@ use std::io::Write;
 use std::path::PathBuf;
 use itertools::Itertools;
 use lewp_css::domain::at_rules::font_face::FontDisplay::fallback;
-use regex::Regex;
+use regex::{Regex, Replacer};
 
 use crate::builder::BuildProcedureBuildError;
 use crate::fs_tree::ParsedFsEntry;
@@ -49,10 +49,15 @@ impl Website {
             if path.ends_with(".html") && !path.ends_with("index.html") {
                 let name = path.split('/').last().unwrap().strip_suffix(".html").unwrap();
                 println!("> {}", &path);
+
+                let cannonical = format!("<link rel=\"canonical\" href=\"/{path}\" />");
+                let content = String::from_utf8(content.clone()).expect("html files are utf8")
+                    .replacen("</head>", format!("{cannonical}</head>").as_str(), 1)
+                    .as_bytes().to_vec();
                 
                 let idx_path = path.replace(format!("{name}.html").as_str(), format!("{name}/index.html").as_str());
                 println!("  - {}", &idx_path);
-                aliases.push((PathBuf::from(idx_path), content.clone()));
+                aliases.push((PathBuf::from(idx_path), content));
             }
         }
         println!("> {} aliases created", &aliases.len());
