@@ -49,6 +49,6 @@ I count the lines by counting the amount of newline characters in the file("\n")
 
 The analysis breaks down to manually selection some interesting file types (the ones you see in the table) and printing out there respective line counts as well as the sum of them.
 
-If you want to have take a look at it, the <a href="https://github.com/NobodyForNothing/aosp-analyzer">code is public on GitHub</a>
+If you want to have take a look at it, the <a href="https://github.com/derdilla/aosp-analyzer">code is public on GitHub</a>
 
 What I found helpful to determine wether and how to count a specific directory was this <a href="https://stackoverflow.com/a/9047693/15581412">2012 Stackoverflow answer</a>.
