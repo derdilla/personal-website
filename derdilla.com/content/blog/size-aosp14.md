@@ -1,3 +1,10 @@
++++
+title = "How many lines of code are in Android 14?"
+description = "Here is how I found out that the AOSP has in fact nearly 200 million lines of code and comments."
+date = 2024-08-23
+template = "blog-entry.html"
++++
+
 You probably came here because you searched for how much code on your device runs. The rough answer is 66 million for explanations why putting a number on this is misleading read the next section. If you want to explore explore the data yourself there are two more detailed sections below.
 
 ## To be Android or not to be Android
@@ -10,6 +17,6 @@ As a middle ground this counting examines the contents of the main [AOSP repo](h
 
 It depends on androids `repo` tool to obtain the source code and [tokei](https://github.com/XAMPPRocky/tokei) to do the heavy line counting work. During line counting I do a preliminary categorization of line data based on the top level directories. After those first two slow steps it begins its actual analysis work: It seperates test code and documentation from the rest *([1](https://github.com/derdilla/aosp-analyzer/blob/main/visualizer/src/extractor.rs#L16-L66))*, removes data only files (mainly random test data) *([2](https://github.com/derdilla/aosp-analyzer/blob/main/visualizer/src/extractor.rs#L71-L73))* and assembles the html *([3](https://github.com/derdilla/aosp-analyzer/blob/main/visualizer/src/format.rs#L57-L62))*. In case you are curious about the details, I think the code is more explicit than this text could ever be.
 
-{{ aosp-data }}
-
 [android-levels]: /assets/android-levels.svg "Levels of android"
+
+{{ sizeaosp14table() }}

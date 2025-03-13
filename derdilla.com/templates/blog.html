@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main>
+    <h1 class="title">Blog</h1>
+    <p>Niche posts about niche subjects so can be shared and get picked up by search engines.</p>
+    <section class="blog">
+        {% for post in section.pages %}
+        <article>
+            <header>
+                <h2>{{ post.title }}</h2>
+                {{ post.date }}
+            </header>
+            <p>{{ post.description }}</p>
+            <a href="{{ post.permalink | safe }}" class="layout-link-button"><span style="padding-right: 8px">Open</span><img alt="Open post" src="assets/btn-progress.svg" width="12px"></a>
+        </article>
+        {% endfor %}
+    </section>
+</main>
+{% endblock content %}
