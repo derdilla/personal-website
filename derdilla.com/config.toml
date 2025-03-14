@@ -1,16 +1,31 @@
 # The URL the site will be built for
 base_url = "https://derdilla.com"
+title = "Derdilla's blog"
+default_language = "en"
+author =  "derdilla"
 
-# Whether to automatically compile all Sass files in the sass directory
+minify_html = true
+generate_feeds = true
+feed_filenames = ["atom.xml", "rss.xml"]
 compile_sass = true
-
-# Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
+generate_robots_txt = true
 
 [markdown]
-# Whether to do syntax highlighting
-# Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
 highlight_code = true
+error_on_mising_highlight = true
+external_link_target_blank = true
+external_link_no_follow = true
+external_link_no_referrer = true
+smart_punctuation = true
+insert_anchor_links = "heading"
+
+[search]
+include_title = true
+include_description = true
+include_date = true
+include_path = true
+include_content = true
 
 [extra]
-# Put all your custom variables here
+# Put all your custom variables here,i,
