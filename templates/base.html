@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=200, initial-scale=1">
+    {% if page is defined and page.description is defined %}
+      <meta name="description" content="{{ page.description }}">
+    {% elif section is defined and section.description is defined %}
+      <meta name="description" content="{{ section.description }}">
+    {% endif %}
+  <title>
+    {% if page is defined and page.title is defined %}
+      {{ page.title }}
+    {% elif section is defined and section.title is defined %}
+      {{ section.title }}
+    {% else %}
+      derdilla.com
+    {% endif %}
+  </title>
+  {% block styles %} {% endblock %}
+</head>
+
+<body>
+  {% block content %} {% endblock %}
+
+  <footer>
+    <address class="space">
+      <a href="https://derdilla.com">Homepage</a>
+      <a href="mailto:contact@derdilla.com">contact@derdilla.com</a>
+      <a href="https://github.com/derdilla">GitHub</a>
+    </address>
+    <div class="space">
+      <a href="/rss.xml">RSS-feed</a>
+      <a href="/atom.xml">Atom-feed</a>
+    </div>
+    <p><i>Except where otherwise noted, content on this site is licensed under a <a
+          href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a> International
+        license.</i></p>
+  </footer>
+
+</body>
+
+</html>

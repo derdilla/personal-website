@@ -1,0 +1,71 @@
+@use 'sass:color';
+
+$textColor: white;
+$background: black;
+$accent: #3dbeff;
+
+body,
+html {
+	margin: 0;
+	background: $background;
+	color: $textColor;
+	font-family: "Varela Round", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+	text-rendering: optimizelegibility;
+}
+
+main {
+	/*
+        Center the main content of the page.
+
+        Explanation:
+        - outer max(3vw, ...)           causes a minimum padding of 3vw on both sides
+        - calc((...) / 2                makes same padding formula applicable to both sides
+        - (100% - min(...)) / 2         calculates padding from width of content
+        - min(max(100ch, 30vw), 100%)   describes the width of the document:
+                                            > on small screens the whole with is taken
+                                            > on normal screens a paragraph is 100 characters wide
+                                            > on large screens the page is at least 30vw wide in order
+                                              to not "waste" too much screen space
+     */
+	padding-left: max(3vw, calc((100% - min(max(100ch, 30vw), 100%)) / 2));
+	padding-right: max(3vw, calc((100% - min(max(100ch, 30vw), 100%)) / 2));
+}
+
+aside {
+	float: right;
+	margin-right: 1ch;
+}
+
+a {
+	color: $accent;
+}
+
+a:visited {
+	color: color.adjust($accent, $lightness: -25%);
+}
+
+main+footer {
+	width: 100vw;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	background: color.adjust($background, $lightness: 12%);
+}
+
+footer {
+	.space {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+
+		* {
+			padding: 10px;
+		}
+	}
+
+	p {
+		padding: 1em;
+	}
+}

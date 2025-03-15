@@ -1,3 +1,10 @@
++++
+title = "Hacking window movement"
+description = "A short tale on the joy of microprojects."
+date = 2024-01-27
+template = "blog-entry.html"
++++
+
 I recently wanted to make my desktop windows keep their inertia and slide a bit further after letting go of them (a bit like kinetic scrolling). "Kinetic window dragging" so to say. For projects like these there is no particular reason. One might even say this decreases usability. It's just a fun thing to do that you will forget about in a few weeks and wouldn't provide any value to anyone else.
 
 <video style="width:100%" controls mute>

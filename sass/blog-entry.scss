@@ -1,0 +1,13 @@
+@use 'base';
+@use 'date-headers';
+
+.back-button {
+  padding: 0.25em;
+  padding-left: 0.6em;
+  padding-right: 0.7em;
+  border: none;
+  background: transparent;
+  color: base.$accent;
+  font-size: inherit;
+  font-weight: bold;
+}

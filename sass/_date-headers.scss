@@ -1,0 +1,10 @@
+/* headlines with publishing date */
+header> :is(h1, h2):has(+ time) {
+  margin-bottom: -0.2em;
+}
+
+/* dates after headlines */
+header> :is(h1, h2)+time {
+  margin-left: 0.2em;
+  font-size: small;
+}
