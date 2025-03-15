@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-
-{% block content %}
-<main>
-    {% set section = get_section(path="_index.md") %}
-    {{ section.content | safe }}
-</main>
-{% endblock content %}

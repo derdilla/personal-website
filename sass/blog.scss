@@ -1,0 +1,38 @@
+@use 'base';
+@use 'date-headers';
+
+.layout-link-button {
+  padding: 4px 4px 4px 1em;
+  width: 90%;
+  display: block;
+  /* TODO */
+}
+
+.blog {
+  article {
+    margin-bottom: 2em;
+    border-left-width: 3px;
+    border-left-style: solid;
+    padding-left: 4px;
+  }
+
+  p {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+  }
+}
+
+.blog>article {
+  border-left-color: #3dbeff;
+  border-radius: 1px;
+}
+
+.layout-link-button::after {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  background: url('/assets/btn-progress.svg') 1em 0 no-repeat;
+  background-size: contain;
+}
