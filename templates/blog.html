@@ -13,7 +13,7 @@
     <article>
       <header>
         <h2>{{ post.title }}</h2>
-        {{ post.date }}
+        <time datetime="{{post.date }}">{{post.date}}</time>
       </header>
       <p>{{ post.description }}</p>
       <a href="{{ post.permalink | safe }}" class="layout-link-button"><span style="padding-right: 8px">Open</span><img
