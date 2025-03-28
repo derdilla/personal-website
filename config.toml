@@ -21,6 +21,7 @@ smart_punctuation = true
 insert_anchor_links = "none"
 
 [search]
+index_format = "fuse_javascript"
 include_title = true
 include_description = true
 include_date = true
