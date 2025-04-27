@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block styles %}
-<link rel="stylesheet" href="home.css" />
+<style>
+  {{ load_data(path="public/home.css") | safe }}
+</style>
 {% endblock styles %}
 
 {% block content %}
