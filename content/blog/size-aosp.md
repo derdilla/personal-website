@@ -5,6 +5,8 @@ date = 2024-01-02
 template = "blog-entry.html"
 +++
 
+_Update:_ I got some newer data from [Android 16](/blog/size-aosp16).
+
 If you want a number <b>2.5 million lines</b> is a reasonable estimate. If you want to know more about it, continue reading.
 
 The values from this blog post will refer the main branch of the <a href="https://source.android.com/">Android open source project (AOSP)</a> as of October 20, 2023, but the methology can be relevant for future versions. 

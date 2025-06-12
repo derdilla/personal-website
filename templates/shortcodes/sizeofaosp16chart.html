@@ -1,0 +1,76 @@
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+<style>
+    #lang-percent > svg {
+        border-radius: 5px;
+        width: min(90vw, 20em);
+        height: min(90vw, 20em);
+        padding: 0.5em;
+    }
+</style>
+<div id="lang-percent" style="padding: 2em; margin: -2em;"></div>
+<script type="text/javascript">
+    function showLangPercent() {
+        const spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "description": "A donut chart showing the lines of code in different programming languages as percentages.",
+        "data": {
+            "values": [{"category":"Rust","value":0.040753342,"loc":5931980},{"category":"Python","value":0.048271094,"loc":7026250},{"category":"Java","value":0.261234,"loc":38024728},{"category":"C","value":0.2689419,"loc":39146679},{"category":"C++","value":0.27130103,"loc":39490071},{"category":"Other","value":0.10949865,"loc":15938421}]
+        },
+        "layer": [
+            {
+                "params": [
+                    {
+                        "name": "highlight",
+                        "select": { "type": "point", "on": "pointerover" }
+                    },
+                ],
+                "mark": {
+                    "type": "arc",
+                    "innerRadius": 50,
+                    "outerRadius": 100,
+                    "cornerRadius": 6,
+                    "padAngle": 0.04
+                },
+                "encoding": {
+                    "color": { "field": "category", "type": "nominal", "legend": null },
+                    "opacity": {
+                        "condition": [
+                            {
+                                "param": "highlight",
+                                "value": 1
+                            }
+                        ],
+                        "value": 0.70
+                    },
+                    "tooltip": [
+                        { "field": "value", "type": "quantitative", "title": "%" }
+                    ]
+                },
+            },
+            {
+                "mark": { "type": "text", "radius": 75 },
+                "encoding": {
+                    "text": { "field": "category", "type": "nominal" }
+                }
+            },
+            {
+                "mark": {
+                    "type": "text",
+                    "text": "Lanugages"
+                },
+
+            }
+        ],
+        "encoding": {
+            "theta": { "field": "value", "type": "quantitative", "stack": true }
+        }
+    };
+
+    vegaEmbed('#lang-percent', spec, { renderer: "svg", actions: false })
+        .catch(console.error);
+    }
+    
+    showLangPercent();
+</script>
