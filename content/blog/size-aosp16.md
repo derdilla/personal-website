@@ -9,9 +9,10 @@ template = "blog-entry.html"
 
 ## Quick facts
 
-- There are over <b>250 million</b> source code lines contributing to android.
-- Roughly <b>92 million</b> lines of code run on the average device.
-- <b>83 million</b> lines of comments and documentation tell the developers what the code does.- <b>8.8%</b> lines are empty.
+- There are over <b>250 million</b> source code lines contributing to Android
+- Roughly <b>92 million</b> lines of code run on the average device
+- <b>83 million</b> lines of comments and documentation tell the developers what the code does
+- <b>8.8%</b> of lines are empty
 
 ## Doughnut chart
 
