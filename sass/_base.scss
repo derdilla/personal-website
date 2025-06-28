@@ -15,6 +15,14 @@ html {
 	text-rendering: optimizelegibility;
 }
 
+body {
+	/* Ensure the footer is always at the bottom */
+	display: flex;
+	flex-flow: column;
+	height: 100vh;
+	justify-content: space-between;
+}
+
 main {
 	/*
         Center the main content of the page.
@@ -54,6 +62,7 @@ main+footer {
 }
 
 footer {
+	margin-top: 1em;
 	.space {
 		width: 100%;
 		display: flex;
