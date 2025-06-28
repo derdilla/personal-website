@@ -4,14 +4,12 @@ $textColor: white;
 $background: black;
 $accent: #3dbeff;
 
-@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
-
 body,
 html {
 	margin: 0;
 	background: $background;
 	color: $textColor;
-	font-family: "Varela Round", sans-serif;
+	font-family: "Courier New", monospace;
 	font-weight: 400;
 	font-style: normal;
 	text-rendering: optimizelegibility;
