@@ -6,7 +6,7 @@ template = "about.html"
 
 # About me
 
-<aside><img class="pfp" src="https://avatars.githubusercontent.com/u/82763757?size=300" alt="Picture of me" width="140" height="140"/></aside>
+<aside><img class="pfp" src="/assets/pfp.jpg" alt="Picture of me" width="140" height="140"/></aside>
 
 This is kind of a portfolio website after all, so here you have a small self-description:
 
