@@ -56,13 +56,12 @@ a:visited {
 
 main+footer {
 	width: 100vw;
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
+	padding: 0.5em;
 	background: color.adjust($background, $lightness: 12%);
 }
 
 footer {
-	margin-top: 1em;
+	font-size: 12px;
 	.space {
 		width: 100%;
 		display: flex;
