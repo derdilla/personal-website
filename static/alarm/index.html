@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Non-Linear Timer</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the slider to be more visible and touch-friendly */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 12px;
+            background: #cbd5e1; /* slate-300 */
+            border-radius: 6px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* Thumb styling for Webkit/Blink */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #1e3a8a; /* blue-900 */
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            margin-top: -6px; /* Center the thumb vertically */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4 font-sans">
+
+    <div id="timer-card" class="bg-white p-8 md:p-12 rounded-xl shadow-2xl w-full max-w-xl transition-all duration-300">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-6 text-center">Set Your Timer</h1>
+
+        <!-- Time Display -->
+        <div id="time-display" class="text-6xl md:text-8xl font-mono font-bold text-center text-blue-800 mb-10 select-none">
+            00:00:05
+        </div>
+
+        <!-- Timer Status Message -->
+        <p id="status-message" class="text-center text-sm mb-6 h-5 text-gray-500">
+            Slide and release to start
+        </p>
+
+        <!-- Slider Input -->
+        <input type="range" id="timer-slider" min="0" max="100" value="0" class="w-full">
+
+        <!-- Custom Modal for Alarm/Message -->
+        <div id="alarm-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+            <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full text-center">
+                <h2 id="modal-title" class="text-3xl font-bold text-red-600 mb-4">Timer Complete!</h2>
+                <p class="text-lg text-gray-700 mb-6">Your countdown has finished.</p>
+                <button onclick="closeAlarmModal()" class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-150">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONSTANTS AND STATE ---
+        const MIN_TIME_SECONDS = 5; // 5 seconds
+        const MAX_TIME_SECONDS = 36000; // 10 hours (10 * 60 * 60)
+        const EXP_FACTOR = MAX_TIME_SECONDS / MIN_TIME_SECONDS; // 7200
+
+        let totalTimeSeconds = MIN_TIME_SECONDS;
+        let remainingSeconds = MIN_TIME_SECONDS;
+        let timerInterval = null;
+        let isRunning = false;
+
+        // --- DOM ELEMENTS ---
+        const timeDisplay = document.getElementById('time-display');
+        const slider = document.getElementById('timer-slider');
+        const statusMessage = document.getElementById('status-message');
+        const timerCard = document.getElementById('timer-card');
+        const alarmModal = document.getElementById('alarm-modal');
+
+        // --- MATH/MAPPING LOGIC ---
+
+        /**
+         * Maps a linear slider value (0-100) to a non-linear time in seconds.
+         * The exponential formula makes it more sensitive at the low (5s) end.
+         * T = T_min * (T_max / T_min) ^ (x / 100)
+         * @param {number} sliderValue - The value from the range input (0 to 100).
+         * @returns {number} The calculated time in seconds.
+         */
+        function mapSliderToTime(sliderValue) {
+            // Formula: 5 * (7200)^(sliderValue / 100)
+            const time = MIN_TIME_SECONDS * Math.pow(EXP_FACTOR, sliderValue / 100);
+            return Math.round(time); // Use Math.round to get clean integer seconds
+        }
+
+        /**
+         * Formats total seconds into HH:mm:ss string.
+         * @param {number} seconds - The total number of seconds.
+         * @returns {string} The formatted time string.
+         */
+        function formatTime(seconds) {
+            const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
+            const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+            const s = String(seconds % 60).padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }
+
+        // --- TIMER CONTROL ---
+
+        /**
+         * Updates the display every second and manages the countdown.
+         */
+        function updateTimer() {
+            if (remainingSeconds <= 0) {
+                stopTimer();
+                triggerAlarm();
+                return;
+            }
+
+            remainingSeconds--;
+            timeDisplay.textContent = formatTime(remainingSeconds);
+            let minI = 0;
+            let minVal = MAX_TIME_SECONDS;
+            for (let i = 0; i <= 100; i++) {
+                const delta = Math.abs(mapSliderToTime(i) - remainingSeconds);
+                if (delta < minVal) {
+                    minVal = delta;
+                    minI = i;
+                }
+            }
+            slider.value = minI;
+        }
+
+        /**
+         * Stops the current timer interval.
+         */
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            isRunning = false;
+        }
+
+        /**
+         * Starts the countdown based on the currently set remainingSeconds.
+         */
+        function startTimer() {
+            if (isRunning) {
+                stopTimer();
+            }
+
+            // Set the interval to run every 1000 milliseconds (1 second)
+            timerInterval = setInterval(updateTimer, 1000);
+            isRunning = true;
+            statusMessage.textContent = 'Timer running...';
+            timerCard.classList.add('ring-4', 'ring-blue-400/50');
+        }
+
+        /**
+         * Handles the alarm UI state when the timer reaches zero.
+         */
+        function triggerAlarm() {
+            statusMessage.textContent = 'TIME IS UP!';
+            timerCard.classList.remove('ring-4', 'ring-blue-400/50');
+            timerCard.classList.add('ring-4', 'ring-red-500/80');
+            alarmModal.classList.remove('hidden');
+        }
+
+        /**
+         * Closes the alarm modal and resets the UI state.
+         */
+        function closeAlarmModal() {
+            alarmModal.classList.add('hidden');
+            timerCard.classList.remove('ring-4', 'ring-red-500/80');
+            slider.disabled = false;
+            resetDisplay(totalTimeSeconds); // Reset display to the last set value
+            statusMessage.textContent = 'Slide and release to start';
+        }
+        window.closeAlarmModal = closeAlarmModal; // Expose to global scope for HTML onclick
+
+        /**
+         * Updates the time display to a specific value and updates the internal state.
+         */
+        function resetDisplay(seconds) {
+            remainingSeconds = seconds;
+            timeDisplay.textContent = formatTime(seconds);
+        }
+
+        // --- EVENT LISTENERS ---
+
+        // 1. Update time display continuously while the user drags the slider (input event)
+        slider.addEventListener('input', (event) => {
+            if (isRunning) {
+                stopTimer();
+                statusMessage.textContent = 'Timer paused. Release slider to restart.';
+                timerCard.classList.remove('ring-4', 'ring-blue-400/50');
+            }
+
+            const value = parseInt(event.target.value);
+            totalTimeSeconds = mapSliderToTime(value);
+            resetDisplay(totalTimeSeconds);
+
+            // Hide alarm if it was showing while interacting with slider
+            if (!alarmModal.classList.contains('hidden')) {
+                alarmModal.classList.add('hidden');
+            }
+        });
+
+        // 2. Start the timer when the user releases the slider (change event)
+        slider.addEventListener('change', () => {
+            if (totalTimeSeconds > 0) {
+                startTimer();
+            }
+        });
+
+        // --- INITIALIZATION ---
+
+        // Set initial state based on slider value 0
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update time once on load for initial value (0 -> 5s)
+            const initialValue = parseInt(slider.value);
+            totalTimeSeconds = mapSliderToTime(initialValue);
+            resetDisplay(totalTimeSeconds);
+        });
+    </script>
+</body>
+</html>
+
