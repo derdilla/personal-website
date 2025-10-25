@@ -19,6 +19,7 @@ external_link_no_follow = true
 external_link_no_referrer = true
 smart_punctuation = true
 insert_anchor_links = "none"
+highlight_theme = "ayu-dark"
 
 [search]
 include_title = true

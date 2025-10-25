@@ -11,3 +11,10 @@
   font-size: inherit;
   font-weight: bold;
 }
+
+
+pre:has(> code) {
+  border-radius: 0.5em;
+  padding: 0.5em;
+  overflow-x: scroll;
+}

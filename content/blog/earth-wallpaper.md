@@ -14,22 +14,22 @@ SWAYBG_PID=""
 
 while true
 do
-	if [ -n "$SWAYBG_PID" ]; then
-        sleep 600
-    fi
+  if [ -n "$SWAYBG_PID" ]; then
+    sleep 600
+  fi
 
-	curl --output "$HOME/Desktop/.bg.png" "https://view.eumetsat.int/geoserver/ows?service=WMS\
+  curl --output "$HOME/Desktop/.bg.png" "https://view.eumetsat.int/geoserver/ows?service=WMS\
 &request=GetMap&version=1.3.0&layers=mtg_fd:rgb_geocolour\
 &styles=&format=image/png&crs=EPSG:4326\
 &bbox=30,-15,59,38\
 &width=2560&height=1440"
-	
-	if [ -n "$SWAYBG_PID" ]; then
-        kill "$SWAYBG_PID" 2>/dev/null
-    fi
 
-	swaybg -i $HOME/Desktop/.bg.png &
-	SWAYBG_PID=$!
+  if [ -n "$SWAYBG_PID" ]; then
+    kill "$SWAYBG_PID" 2>/dev/null
+  fi
+
+  swaybg -i $HOME/Desktop/.bg.png &
+  SWAYBG_PID=$!
 done
 ```
 
