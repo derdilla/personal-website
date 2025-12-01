@@ -6,7 +6,10 @@ template = "about.html"
 
 # About me
 
-<aside><img class="pfp" src="/assets/pfp.jpg" alt="Picture of me" width="140" height="140"/></aside>
+<aside><img class="pfp"
+    src="/assets/pfp.webp"
+    alt="Selfie at the Cologne train station"
+    width="140" height="140"/></aside>
 
 I go by many names, but most of my currently public online works can be found
 under the alias *derdilla*. Unlike what others suggested this has nothing to do with
