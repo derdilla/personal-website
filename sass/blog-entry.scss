@@ -3,13 +3,14 @@
 
 .back-button {
   padding: 0.25em;
-  padding-left: 0.6em;
+  padding-left: 0;
   padding-right: 0.7em;
   border: none;
   background: transparent;
   color: base.$accent;
   font-size: inherit;
   font-weight: bold;
+  cursor: pointer;
 }
 
 
