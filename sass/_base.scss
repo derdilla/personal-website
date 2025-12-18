@@ -39,6 +39,7 @@ main {
      */
 	padding-left: max(3vw, calc((100% - min(max(100ch, 30vw), 100%)) / 2));
 	padding-right: max(3vw, calc((100% - min(max(100ch, 30vw), 100%)) / 2));
+	padding-bottom: 0.5em;
 }
 
 aside {
