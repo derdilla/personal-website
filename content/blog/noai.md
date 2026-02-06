@@ -1,7 +1,6 @@
 +++
 title = "AI? Nah."
-description = "
-Within 3 to 4 years, there won't be (affordable) AI. I have the time to code properly right now — I shouldn't waste it taking AI shortcuts."
+description = "Within 3 to 4 years, there won't be (affordable) AI. I have the time to code properly right now — I shouldn't waste it taking AI shortcuts."
 date = 2026-02-06
 template = "blog-entry.html"
 +++
