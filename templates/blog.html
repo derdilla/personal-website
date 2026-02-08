@@ -18,8 +18,7 @@
         <time datetime="{{post.date }}">{{post.date}}</time>
       </header>
       <p>{{ post.description }}</p>
-      <a href="{{ post.permalink | safe }}">Open<img
-          alt="Open post" src="/assets/btn-progress.svg" width="12px"></a>
+      <a href="{{ post.permalink | safe }}">Open›</a>
     </article>
     {% endfor %}
   </section>
