@@ -66,7 +66,6 @@
     let interval;
     let running = false;
     function toggleTimer() {
-      console.log('asd');
       const start = performance.now();
       if (interval) clearInterval(interval);
       if (running) {
@@ -78,9 +77,11 @@
       interval = setInterval(() => {
         const d = performance.now() - start;
         const ms = (d % 1000).toString();
-        const s = (((d - ms) / 1000) % 60).toString();
-        const m = (((d - ms - s * 1000) / 6000) % 60).toString();
-        timer.innerText = `${m.padStart(2, "0")}:${s.padStart(2, "0")}.${ms.padStart(3, "0")}`;
+        const s = (Math.floor(d / 1000) % 60).toString();
+        const m = (Math.floor(d / 60000) % 60).toString();
+        const h = ((Math.floor(d / (60 * 60000))) % 60).toString();
+        const hStr = h != '0' ? `${h.padStart(2, '0')}:` : '';
+        timer.innerText = `${hStr}${m.padStart(2, '0')}:${s.padStart(2, '0')}.${ms.padStart(3, '0')}`;
       }, 1);
     };
   </script>
