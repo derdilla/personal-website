@@ -4,7 +4,7 @@ description = "Self description of programmer 'derdilla'"
 template = "page.html"
 +++
 
-My primary user name is _derdilla_, my real name is _Richard Rausch_, past aliases include _NobodyForNothing_ and _V=98_. I used social@derdilla.com to create most of my accounts. When n name isn't available I try to add a number like 98 at the end. I have a [PGP key](/derdilla.asc) if you care about that sort of stuff. E-Mail is still never secure. You generally know if something is authentic, if it's from an account listed here.
+My primary user name is _derdilla_, my real name is _Richard Rausch_, past aliases include _NobodyForNothing_ and _V=98_. I used social@derdilla.com to create most of my accounts. When a name isn't available I try to add a number like 98 at the end. I have a [PGP key](/derdilla.asc) if you care about that sort of stuff. E-Mail is still never secure. You generally know if something is authentic, if it's from an account listed here.
 
 I will most likely get your message here:
 - E-Mail: <a href="mailto:contact@derdilla.com" rel="me">contact@derdilla.com</a>
