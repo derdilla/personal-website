@@ -1,6 +1,6 @@
 # The URL the site will be built for
 base_url = "https://derdilla.com"
-title = "Derdilla's blog"
+title = "derdilla's blog"
 default_language = "en"
 author =  "derdilla"
 

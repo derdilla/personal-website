@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<style>
+  {{ load_data(path="public/page.css") | safe }}
+</style>
+{% endblock styles %}
+
+{% block content %}
+
+<main>
+    <h1>{{ page.title }}</h1>
+    {{ page.content | safe}}
+</main>
+{% endblock content %}

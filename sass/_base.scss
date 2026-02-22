@@ -37,8 +37,8 @@ main {
                                             > on large screens the page is at least 30vw wide in order
                                               to not "waste" too much screen space
      */
-	padding-left: max(3vw, calc((100% - min(max(100ch, 30vw), 100%)) / 2));
-	padding-right: max(3vw, calc((100% - min(max(100ch, 30vw), 100%)) / 2));
+	padding-left: max(3vw, calc((100% - min(max(90ch, 30vw), 100%)) / 2));
+	padding-right: max(3vw, calc((100% - min(max(90ch, 30vw), 100%)) / 2));
 	padding-bottom: 0.5em;
 }
 
@@ -76,6 +76,7 @@ footer {
 
 	p {
 		padding: 1em;
+		margin-top: 0;
 	}
 }
 
