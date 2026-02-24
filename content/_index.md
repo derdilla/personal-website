@@ -16,7 +16,7 @@ under the alias *derdilla*.
 
 Currently, I'm a computer science student. I code for fun, primarily in <font color="red">Rust</font> and <font color="lightblue">Dart</font>.
 I made lots of [nice and simple programs](https://github.com/derdilla?tab=repositories&q=&type=&language=rust&sort=stargazers), all of them open source.
-The most successful of which is my [blood pressure logging](https://github.com/derdilla/blood-pressure-monitor-fl) ([browse](https://derdilla.com/git/bpapp)) Android app.
+The most successful of which is my [blood pressure logging](https://github.com/derdilla/blood-pressure-monitor-fl) Android app.
 
 ## What's next
 
