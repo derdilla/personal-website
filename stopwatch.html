@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=200, initial-scale=1">
+  <title>Stopwatch</title>
+  <style>
+    body {
+        margin: 0;
+    	background: black;
+    	color: white;
+    	font-family: "Courier New", Courier, monospace;
+    	text-rendering: optimizelegibility;
+
+        /* Ensure the footer is always at the bottom */
+    	display: flex;
+    	flex-flow: column;
+    	height: 100vh;
+    	justify-content: space-between;
+    }
+
+    footer {
+    	font-size: 12px;
+    	padding: 0.5em;
+    	background: #1f1f1f;
+
+    	.space {
+    		width: 100%;
+    		display: flex;
+    		flex-wrap: wrap;
+    		justify-content: space-around;
+
+    		* {
+    			padding: 10px;
+    		}
+    	}
+
+    	p {
+    		padding: 1em;
+    		margin-top: 0;
+    	}
+    }
+
+    main {
+        height: inherit;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+    }
+
+    #timer {
+        font-size: 40pt;
+        user-select: none;
+    }
+  </style>
+</head>
+
+<body>
+  <main onclick="toggleTimer()">
+      <span id="timer">00:00.000</span>
+  </main>
+
+  <script>
+    let timer = document.getElementById('timer');
+    let interval;
+    let running = false;
+    function toggleTimer() {
+      const start = performance.now();
+      if (interval) clearInterval(interval);
+      if (running) {
+        running = false;
+        return;
+      }
+      running = true;
+
+      interval = setInterval(() => {
+        const d = performance.now() - start;
+        const ms = (d % 1000).toString();
+        const s = (Math.floor(d / 1000) % 60).toString();
+        const m = (Math.floor(d / 60000) % 60).toString();
+        const h = ((Math.floor(d / (60 * 60000))) % 60).toString();
+        const hStr = h != '0' ? `${h.padStart(2, '0')}:` : '';
+        timer.innerText = `${hStr}${m.padStart(2, '0')}:${s.padStart(2, '0')}.${ms.padStart(3, '0')}`;
+      }, 1);
+    };
+  </script>
+
+  <footer>
+    <div class="space">
+      <a href="/">Home</a>
+      <a href="/contact" rel="me">Contact</a>
+      <a href="/blog">Blog</a>
+    </div>
+    <p><i>Except where otherwise noted, content on this site is licensed under a <a
+          href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a> International
+        license.</i></p>
+  </footer>
+
+</body>
+
+</html>
