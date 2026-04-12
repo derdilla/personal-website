@@ -14,7 +14,7 @@ I will most likely get your message here:
 Stuff I publish usually lands here:
 - <a href="https://codeberg.org/derdilla" rel="me noopener nofollow noreferrer external">Codeberg</a>
 - <a href="https://github.com/derdilla/" rel="me noopener nofollow noreferrer external">GitHub</a>
-- <a href="https://www.youtube.com/@derdilla98" rel="me noopener nofollow noreferrer external">YouTube</a>
+- <a href="https://www.youtube.com/@derdilla" rel="me noopener nofollow noreferrer external">YouTube</a>
 - <a href="https://mastodon.social/@derdilla" rel="me noopener nofollow noreferrer external">Mastodon</a>
 
 I take donations (gifts) at:
