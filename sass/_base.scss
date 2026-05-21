@@ -87,3 +87,13 @@ blockquote {
     border-left-width: 2px;
     padding-left: 12px;
 }
+
+code {
+	background: #000a17;
+	padding: 0 3px;
+	border-radius: 5px;
+}
+
+pre code {
+	background: none;
+}
