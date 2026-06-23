@@ -5,7 +5,7 @@ date = 2024-08-23
 template = "blog-entry.html"
 +++
 
-_Update:_ I got some newer data from [Android 16](/blog/size-aosp16).
+_Update:_ I got some newer data from [Android 17](/blog/size-aosp17).
 
 You probably came here because you searched for how much code on your device runs. The rough answer is 66 million, for explanations why putting a number on this is misleading read the next section. If you want to explore explore the data yourself there are two more detailed sections below.
 

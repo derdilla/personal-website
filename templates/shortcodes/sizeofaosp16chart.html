@@ -1,6 +1,6 @@
-<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega@6.2.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@6.4.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@7.1.0"></script>
 <style>
     #lang-percent > svg {
         border-radius: 5px;
@@ -58,7 +58,7 @@
             {
                 "mark": {
                     "type": "text",
-                    "text": "Lanugages"
+                    "text": "Languages"
                 },
 
             }
@@ -71,6 +71,6 @@
     vegaEmbed('#lang-percent', spec, { renderer: "svg", actions: false })
         .catch(console.error);
     }
-    
+
     showLangPercent();
 </script>

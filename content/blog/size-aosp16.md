@@ -5,6 +5,8 @@ date = 2025-06-12
 template = "blog-entry.html"
 +++
 
+_Update:_ I got some newer data from [Android 17](/blog/size-aosp17).
+
 [Android 16](https://www.android.com/intl/en_us/new-features-on-android/?category=android-16) just released, and with it the code size grew again (+50 mil. LoC since Android 14). But you probably came here because you searched for how much code runs on your device. The rough answer is **92 million** for explanations why putting a number on this is misleading read [my last post on that matter](/blog/size-aosp14). If you want to explore explore the data yourself there are two more details below. As always the raw data and source code is [here](https://github.com/derdilla/aosp-analyzer).
 
 ## Quick facts

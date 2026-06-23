@@ -5,7 +5,7 @@ date = 2024-01-02
 template = "blog-entry.html"
 +++
 
-_Update:_ I got some newer data from [Android 16](/blog/size-aosp16).
+_Update:_ I got some newer data from [Android 17](/blog/size-aosp17).
 
 If you want a number <b>2.5 million lines</b> is a reasonable estimate. If you want to know more about it, continue reading.
 
