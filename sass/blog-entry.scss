@@ -34,25 +34,26 @@ main {
 	}
 }
 
-@media (min-width: 1400px) {
-    #toc {
-        position: sticky;
-        left: 0;
-        height: 0;
-        top:0;
-        width: 25ch;
+nav {
+    display: none;
+    position: sticky;
+    left: 0;
+    top:0;
+    height: 0;
+    width: 25ch;
 
-        ul {
-            padding-left: 2ch;
-            list-style-type: none;
-        }
-        li {
-            padding-bottom: 0.4em;
-        }
+    ul {
+        padding-left: 2ch;
+        list-style-type: none;
+    }
+    li {
+        padding-bottom: 0.4em;
     }
 }
-@media (max-width: 1400px) {
-    #toc {
-        display: none;
+
+// FIXME: somehow this renders with layout for a single frame
+@media (min-width: 1400px) {
+    nav {
+        display: block;
     }
 }

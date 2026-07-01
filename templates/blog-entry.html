@@ -12,7 +12,7 @@
   <h1><button class="back-button" onclick="window.location.href='/blog'">‹ Blog</button>{{ page.title }}</h1>
   <time datetime="{{ page.date }}"> {{ page.date }}</time>
 </header>
-<aside id="toc">
+<nav>
   <ul>
   {% for h1 in page.toc %}
     <li>
@@ -29,7 +29,7 @@
     </li>
   {% endfor %}
   </ul>
-</aside>
+</nav>
 <main>
   {{ page.content | safe}}
 </main>
