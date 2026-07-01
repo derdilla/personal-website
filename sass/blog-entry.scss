@@ -19,3 +19,13 @@ pre:has(> code) {
   padding: 0.5em;
   overflow-x: scroll;
 }
+
+main {
+    p {
+        text-align: justify;
+        overflow-wrap: break-word;
+    }
+	*:not(h1, h2, h3, h4) {
+	    line-height: 1.6;
+	}
+}

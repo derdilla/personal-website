@@ -9,12 +9,10 @@
 {% block content %}
 
 <main>
-  <article>
-    <header>
-      <h1><button class="back-button" onclick="window.location.href='/blog'">‹ Blog</button>{{ page.title }}</h1>
-      <time datetime="{{ page.date }}"> {{ page.date }}</time>
-    </header>
-    {{ page.content | safe}}
-  </article>
+  <header>
+    <h1><button class="back-button" onclick="window.location.href='/blog'">‹ Blog</button>{{ page.title }}</h1>
+    <time datetime="{{ page.date }}"> {{ page.date }}</time>
+  </header>
+  {{ page.content | safe}}
 </main>
 {% endblock content %}
