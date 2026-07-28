@@ -39,7 +39,6 @@ I reserved these accounts, but don't regularly check them:
 - <a href="https://www.flickr.com/people/202085368@N02/" rel="me noopener nofollow noreferrer external">flickr</a>
 - <a href="https://www.pinterest.com/social2775/" rel="me noopener nofollow noreferrer external">pinterest</a>
 - <a href="https://myspace.com/derdilla" rel="me noopener nofollow noreferrer external">MySpace</a>
-- <a href="https://x.com/derdilla" rel="me noopener nofollow noreferrer external">Twitter/𝕏</a> (ew)
 - <a href="https://www.tumblr.com/blog/derdilla98" rel="me noopener nofollow noreferrer external">tumblr</a>
 - <a href="https://liberapay.com/derdilla/" rel="me noopener nofollow noreferrer external">liberapay</a>
 - <a href="https://ko-fi.com/derdilla" rel="me noopener nofollow noreferrer external">ko-fi</a>
