@@ -29,3 +29,16 @@ flutter clean
 ```
 
 I should have probably done that anyways after upgrading.
+
+## Update 3 Aug. 26
+
+Another problem with the same solution:
+
+```
+Launching lib/main.dart on Linux in debug mode...
+/home/derdilla/code/blood-pressure-monitor-fl/app/linux/flutter/ephemeral/.plugin_symlinks/jni/src/dartjni.h:166:48: error: incompatible pointer types passing 'JNIEnv **' (aka 'const struct JNINativeInterface_ ***') to parameter of type 'void **' [-Wincompatible-pointer-types]
+/home/derdilla/code/blood-pressure-monitor-fl/app/linux/flutter/ephemeral/.plugin_symlinks/jni/src/dartjni.c:189:56: error: incompatible pointer types passing 'JNIEnv **' (aka 'const struct JNINativeInterface_ ***') to parameter of type 'void **' [-Wincompatible-pointer-types]
+/home/derdilla/code/blood-pressure-monitor-fl/app/linux/flutter/ephemeral/.plugin_symlinks/jni/src/third_party/../dartjni.h:166:48: error: incompatible pointer types passing 'JNIEnv **' (aka 'const struct JNINativeInterface_ ***') to parameter of type 'void **' [-Wincompatible-pointer-types]
+Building Linux application...                                           
+Error: Build process failed
+```
