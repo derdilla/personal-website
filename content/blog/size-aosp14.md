@@ -21,4 +21,4 @@ It depends on androids `repo` tool to obtain the source code and [tokei](https:/
 
 [android-levels]: /assets/android-levels.svg "Levels of android"
 
-{{ sizeaosp14table() }}
+{{ <include_html path="content/_html_blobs/sizeaosp14table.html" /> }}

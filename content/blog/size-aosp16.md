@@ -20,6 +20,6 @@ _Update:_ I got some newer data from [Android 17](/blog/size-aosp17).
 
 This time I included this nice interactive doughnut chart of the programming languages used (unfortunately requires JavaScript).
 
-{{ sizeofaosp16chart() }}
+{{ <include_html path="content/_html_blobs/sizeofaosp16chart.html" /> }}
 
-{{ sizeaosp16table() }}
+{{ <include_html path="content/_html_blobs/sizeaosp16table.html" /> }}

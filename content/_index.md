@@ -23,7 +23,7 @@ The most successful of which is my [blood pressure logging](https://github.com/d
 - Checkout my [blog](./blog)
 - Look at my [GitHub](https://github.com/derdilla)
 - Find out [how this website is build](https://github.com/derdilla/personal-website)
+- [Read some books](./books)
 
 If you just wanted to reach out to me and read through all of that: have a look
 at the footer :).
-

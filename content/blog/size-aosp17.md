@@ -16,6 +16,6 @@ Android 17 has roughly *113 million* lines of code running on the average device
 
 ## Doughnut chart
 
-{{ sizeofaosp17chart() }}
+{{ <include_html path="content/_html_blobs/sizeofaosp17chart.html" /> }}
 
-{{ sizeaosp17table() }}
+{{ <include_html path="content/_html_blobs/sizeaosp17table.html" /> }}
